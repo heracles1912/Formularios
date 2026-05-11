@@ -1,0 +1,5542 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Sistemas de fromularios
+</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs/dist/exceljs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/file-saver/dist/FileSaver.min.js"></script>
+
+<style>
+  .cardMenuAdmin{
+   background: linear-gradient(135deg, #1e5b4f, #f1f5f9);
+  padding:40px;
+  border-radius:20px;
+  width:350px;
+  margin:auto;
+  margin-top:80px;
+  box-shadow:0 20px 50px rgba(0,0,0,0.25);
+  backdrop-filter: blur(10px);
+  text-align:center;
+}
+
+.cardMenuAdmin h2{
+  font-size:22px;
+  margin-bottom:25px;
+}
+
+/* BOTONES BASE */
+.btnMenu{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.25s;
+}
+
+/* HOVER PRO */
+.btnMenu:hover{
+  transform:translateY(-2px) scale(1.03);
+  box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* COLORES POR TIPO */
+.btnAlumbrado{
+  background:#facc15;
+  color:#000;
+}
+
+.btnBombeo{
+  background:#3b82f6;
+  color:white;
+}
+
+.btnTransporte{
+  background:#8b5cf6;
+  color:white;
+}
+
+.btnOtro{
+  background:#64748b;
+  color:white;
+}
+
+.btnEdificios{
+  background:#10b981;
+  color:white;
+}
+
+/* BOTÓN CERRAR */
+.btnCerrar{
+  background:#ef4444;
+  color:white;
+}
+  #contenedorReportesGenerales{
+  flex:1;
+  overflow-y:auto;
+  padding-right:5px;
+
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+.btnAdminEsquina{
+  position:fixed;
+  top:20px;
+  right:20px;
+
+  background:#1e293b;
+  color:white;
+
+  border:none;
+  padding:10px 16px;
+
+  border-radius:12px;
+  cursor:pointer;
+
+  font-weight:bold;
+  z-index:9999;
+
+  box-shadow:0 5px 15px rgba(0,0,0,0.2);
+
+  transition:0.2s;
+}
+
+.btnAdminEsquina:hover{
+  background:#000;
+  transform:translateY(-2px);
+}
+
+#detalleEdificio hr{
+  margin:10px 0;
+  border:none;
+  height:1px;
+  background:#98989A;
+}
+
+.separador{
+  width:100%;
+  height:4px;
+  background:linear-gradient(to right, transparent, #000000, transparent);
+  border-radius:10px;  /* 🔥 bordes suaves */
+  margin:25px 0;
+}
+.loginCardlogos{
+  width:100%;
+  display:flex;              /* 🔥 activa centrado */
+  justify-content:center;   /* 🔥 centro horizontal */
+  align-items:center;       /* 🔥 centro vertical */
+  padding:10px 0;
+}
+
+.logos{
+  display:block;
+  margin:auto;              /* 🔥 refuerza centrado */
+  max-width:350px;
+  width:100%;
+}
+
+  .fechaReporte{
+  font-size:12px;
+  color:#070707;
+  margin-top:3px;
+}
+.itemReporteExterno{
+  background: linear-gradient(135deg, #ffffff, #f8fafc);
+  padding:18px;
+  border-radius:18px;
+  margin-bottom:15px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.08);
+  transition:0.25s;
+}
+
+.itemReporteExterno:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 30px rgba(0,0,0,0.12);
+
+}
+
+/* HEADER */
+.headerReporte{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:12px;
+}
+
+/* NOMBRE */
+.nombreReporte{
+  font-size:18px;
+  font-weight:700;
+  color:#111827;
+}
+
+/* DIRECCIÓN */
+.direccionReporte{
+  font-size:13px;
+  color:#64748b;
+  margin-top:3px;
+}
+
+.nomReporte{
+  font-size:13px;
+  color:#64748b;
+  margin-top:3px;
+}
+
+/* TEXTO */
+.textoReporte{
+  background:#dcfce7;
+  padding:14px;
+  border-radius:12px;
+  font-size:14px;
+  line-height:1.5;
+  color:#1e293b;
+  min-height:70px;
+
+  /* 🔥 FIX */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+/* BOTÓN ELIMINAR */
+.btnEliminarExt{
+  background:#fee2e2;
+  border:none;
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  cursor:pointer;
+  transition:0.2s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+}
+
+.btnEliminarExt:hover{
+  background:#ef4444;
+  color:white;
+  transform:scale(1.1);
+}
+.btnEliminarExt{
+  background:#fee2e2;
+  border:none;
+  padding:6px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.btnEliminarExt:hover{
+  background:#ef4444;
+  color:white;
+}
+
+.textoReporte{
+  background:#f1f5f9;
+  padding:10px;
+  border-radius:8px;
+  min-height:60px; /* 🔥 MÁS GRANDE */
+}
+.accionesPersonal button{
+  padding:10px 10px;
+  border-radius:8px;
+  border:none;
+  background:#c0c0c0;
+  cursor:pointer;
+  transition:0.2s;
+  font-size:16px;
+  line-height:1; /* 👈 evita que uno crezca más */
+}
+.accionesPersonal{
+  align-self:flex-end;
+}
+
+.accionesPersonal button:hover{
+  background:#ffebee;
+  color:#d32f2f;
+  transform:scale(1.1);
+}
+
+
+
+
+#detalleEdificio p{
+  margin:5px 0;
+}
+
+
+.btnEliminar {
+  background:#8a8888;
+  color:#ffffff;
+  border:none;
+  padding:6px 10px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.btnEliminar:hover{
+  background:#eb0909;
+}
+
+.selectorModerno{
+  display:flex;
+  gap:10px;
+  background:white;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #ccc;
+  flex-wrap:wrap;
+}
+
+.opcionMes{
+  padding:10px 14px;
+  border-radius:10px;
+  background:#f1f5f9;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.opcionMes:hover{
+  background:#dbeafe;
+}
+
+.opcionMes.activo{
+  background:#3b82f6;
+  color:white;
+  font-weight:bold;
+}
+.cardResultado{
+  width:100%;              /* 🔥 ocupa todo el ancho */
+  box-sizing:border-box;   /* 🔥 no se desborde */
+  
+  padding:20px;
+  border-radius:18px;
+
+  background: linear-gradient(135deg, #b3b1b1, #f1f5f9);
+  box-shadow:0 10px 25px rgba(0,0,0,0.1);
+
+  display:flex;            /* 👇 esto mejora estructura interna */
+  flex-direction:column;
+}
+
+.cardResultado:hover{
+  transform:translateY(-4px);
+
+}
+.grupoCampo select{
+  padding:12px 40px 12px 14px; /* espacio para flecha */
+  border-radius:12px;
+  border:1px solid #ccc;
+  font-size:15px;
+  background:white;
+  transition:0.2s;
+  appearance:none;
+  cursor:pointer;
+
+  /* 👇 flecha */
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%233b82f6' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size:16px;
+}
+
+/* HOVER */
+.grupoCampo select:hover{
+  border-color:#3b82f6;
+}
+
+/* FOCUS */
+.grupoCampo select:focus{
+  border-color:#3b82f6;
+  outline:none;
+  box-shadow:0 0 0 4px rgba(59,130,246,0.2);
+}
+    .filaAcciones{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+}
+
+.filaBloqueos{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin-top:6px;
+  opacity:0.85;
+}
+    .btnBloqueado {
+  background: #fecaca !important;
+  color: #b91c1c !important;
+  cursor: not-allowed;
+}
+
+.btnActivo {
+  background: #bbf7d0 !important;
+  color: #166534 !important;
+}
+  #modalUsuarioCreado .modalContenido{
+  background:#5280ca;
+  color:white;
+}
+
+#modalUsuarioCreado strong{
+  color:#38bdf8;
+}
+.tablaActividades tbody tr:nth-child(odd){
+  background:#ffffff;
+}
+
+.tablaActividades tbody tr:nth-child(even){
+  background:#f8fafc;
+}
+
+.tablaActividades tbody tr:hover{
+  background:#e0f2fe;
+  transform:scale(1.005);
+}
+
+  #resultadoComparacion{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:10px;
+}
+
+/* TARJETAS */
+
+.cardResultado:hover{
+  transform:translateY(-2px);
+}
+#listaRegistros{
+  flex:1;
+  overflow-y:auto;
+  padding-right:5px;
+}
+#listaReportes{
+  display:flex;
+  flex-direction:column; /* 🔥 esto los pone en vertical */
+  gap:20px;
+  width:100%;
+}
+/* COLORES */
+.cardResultado.rojo{
+  border-color:#e27d7d;
+}
+
+.cardResultado.verde{
+  border-color:#22c55e;
+}
+
+/* TEXTO */
+.tituloActividad{
+  font-weight:600;
+  font-size:15px;
+  margin-bottom:5px;
+}
+
+.detalleResultado{
+  font-size:14px;
+  color:#555;
+}
+
+/* SIN RESULTADOS */
+.sinResultados{
+  padding:15px;
+  border-radius:10px;
+  background:#f1f5f9;
+  text-align:center;
+}
+  .modal{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.4);
+  backdrop-filter: blur(5px); /* 👈 efecto vidrio */
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+
+
+
+@keyframes fadeIn{
+  from{
+    opacity:0;
+    transform:scale(0.9);
+  }
+  to{
+    opacity:1;
+    transform:scale(1);
+  }
+}
+.modalContenido{
+  background: linear-gradient(135deg, #1e5b4f, #f1f5f9);
+  padding:40px;
+  border-radius:25px;
+  width:500px; /* 👈 más grande */
+  max-width:90%;
+  box-shadow:0 25px 60px rgba(0,0,0,0.25);
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  animation:fadeIn 0.3s ease;
+  overflow:hidden; 
+}
+
+/* TITULO */
+.modalContenido h3{
+  margin:0;
+  font-size:26px;
+  font-weight:700;
+}
+
+/* INPUTS GRANDES */
+.modalContenido input{
+  padding:14px;
+  border-radius:12px;
+  border:1px solid #ddd;
+  font-size:16px;
+  transition:0.2s;
+}
+
+.modalContenido input:focus{
+  border-color:#3b82f6;
+  outline:none;
+  box-shadow:0 0 0 4px rgba(59,130,246,0.2);
+}
+
+    .gridPersonas{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(280px,1fr));
+  gap:20px;
+}
+
+.cardPersona{
+  background: linear-gradient(135deg, #afeaf1, #cbd5e1);
+  padding:20px;
+  border-radius:15px;
+  box-shadow:0 10px 25px rgba(225, 217, 217, 0.2);
+  transition:0.3s;
+}
+
+.cardPersona:hover{
+  transform:translateY(-2px);
+ 
+ 
+}
+
+.headerPersona h3{
+  margin:0;
+  font-size:18px;
+}
+
+.puesto{
+  font-size:13px;
+  color:#000000;
+}
+
+.statsPersona{
+  display:flex;
+  justify-content:space-between;
+  margin:15px 0;
+}
+
+.statsPersona div{
+  text-align:center;
+}
+
+.statsPersona strong{
+  font-size:18px;
+  display:block;
+}
+
+.statsPersona span{
+  font-size:12px;
+  color:#000000;
+}
+
+.barraFondo{
+  background:#1e293b;
+  height:10px;
+  border-radius:10px;
+  overflow:hidden;
+  margin-bottom:10px;
+}
+
+
+.actividadesMini{
+  font-size:13px;
+  color:#1a1a1c;
+}
+
+.miniItem{
+  margin-bottom:5px;
+}
+  .foco{
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  display:inline-block;
+  margin-right:6px;
+  animation:parpadeo 1s infinite;
+}
+
+.rojo{
+  color:#dc2626;
+  font-weight:bold;
+  background:none !important;
+}
+
+.verde{
+  color:#16a34a;
+  font-weight:bold;
+  background:none !important;
+}
+
+
+
+@keyframes parpadeo{
+  0%{opacity:1;}
+  50%{opacity:0.3;}
+  100%{opacity:1;}
+}
+  .accionesAnalisis{
+  margin-top:25px;
+}
+  .itemRanking{
+  margin-bottom:20px;
+}
+
+.rankingTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6px;
+}
+
+.posicion{
+  font-weight:bold;
+  color:#2e7d32;
+}
+
+.nombre{
+  flex:1;
+  margin-left:10px;
+  font-weight:600;
+}
+
+
+    .botonesForm{
+  display:flex;
+  flex-direction:column; /* uno abajo del otro */
+  gap:12px; /* 👈 separación automática */
+}
+    .btnVerde{
+  background:#20c012;
+  color:white;
+  border:none;
+  padding:10px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+  transition:0.2s;
+}
+
+.btnVerde:hover{
+  background:#256628;
+  transform:translateY(-1px);
+}
+.btnRojos{
+  background:#28b33a;
+  color:white;
+  border:none;
+  padding:10px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+  transition:0.2s;
+}
+
+.btnRojos:hover{
+  background:#046b21;
+  transform:translateY(-1px);
+}
+ .btnRojo{
+  background:#e90303;
+  color:white;
+  border:none;
+  padding:10px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+  transition:0.2s;
+}
+
+.btnRojo:hover{
+  background:#b74e4e;
+  transform:translateY(-1px);
+}
+    input[type="time"]:focus,
+input[type="date"]:focus{
+  border-color:#2e7d32;
+  outline:none;
+  box-shadow:0 0 0 3px rgba(46,125,50,0.15);
+}
+    input[type="time"],
+input[type="date"]{
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  font-size:14px;
+  background:white;
+  transition:0.2s;
+  width:200px;
+}
+    .grupoCampo{
+  display:flex;
+  flex-direction:column;
+}
+    .formActividad{
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+
+.formActividad label{
+  font-weight:600;
+  margin-bottom:5px;
+}
+
+.formActividad input{
+  padding:12px 12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:14px;
+  transition:0.2s;
+}
+
+
+    .finPendiente span{
+  font-size:13px;
+  color:#777;
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+    .finPendiente button{
+  padding:6px 10px;
+  border-radius:6px;
+  background:#e0e0e0;
+}
+
+.finPendiente button:hover{
+  background:#c8e6c9;
+}
+    .finPendiente input{
+  width:120px;
+  padding:6px;
+}
+
+
+    .finPendiente{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#999;
+  font-size:13px;
+}
+    button{
+  padding:6px 10px;
+  border-radius:6px;
+  border:none;
+  background:#e0e0e0;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+button:hover{
+  background:#c8e6c9;
+  transform:scale(1.05);
+}
+    input[type="time"]{
+  padding:8px 10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  background:white;
+  font-size:14px;
+}
+
+    .iconoMes{
+  font-size:20px;
+  margin-right:10px;
+}
+    .itemMes button{
+  padding:8px 10px;
+  border-radius:8px;
+  border:none;
+  background:#98989a;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.itemMes button:hover{
+  background:#ffebee;
+  color:#d32f2f;
+  transform:scale(1.3);
+}
+    .itemMes{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgb(191, 29, 29);
+  padding:18px 22px;
+  margin-bottom:15px;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(189, 22, 22, 0.08);
+  transition:all 0.25s ease;
+  border-left:5px solid transparent;
+  cursor:pointer;
+}
+
+.itemMes:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 20px rgba(0,0,0,0.12);
+ 
+
+}
+    .iconoPersona{
+  font-size:20px;
+  margin-right:10px;
+}
+.accionesPersona button{
+  padding:10px 10px;
+  border-radius:8px;
+  border:none;
+  background:#f1f1f1;
+  cursor:pointer;
+  transition:0.2s;
+  font-size:16px;
+  line-height:1; /* 👈 evita que uno crezca más */
+}
+.accionesPersona{
+  align-self:flex-end;
+}
+
+.accionesPersona button:hover{
+  background:#ffebee;
+  color:#d32f2f;
+  transform:scale(1.1);
+}
+
+.finPendiente{
+  display:flex;
+  flex-direction:column; /* 👈 uno debajo de otro */
+  align-items:center;
+  gap:5px;
+}
+
+
+.tablaActividades{
+  border-collapse:separate;
+  border-spacing:0;
+  border-radius:15px;
+  overflow:hidden;
+  width:100%;
+  background:white;
+}
+
+
+.tablaActividades td{
+  padding:12px;
+  font-size:14px;
+}
+
+.tablaActividades tbody tr{
+  transition:0.2s;
+}
+
+.tablaActividades tbody tr:hover{
+  background:#f0f9ff;
+  transform:scale(1.01);
+}
+
+.accionesTabla{
+  display:flex;
+  gap:8px;
+  justify-content:center;
+}
+
+.btnIcono{
+  background:#f1f5f9;
+  border:none;
+  padding:6px 8px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.btnIcono:hover{
+  background:#e0f2fe;
+  transform:scale(1.1);
+}
+.badgeTipo{
+  background:#dbeafe;
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:13px;
+  font-weight:bold;
+}
+.listaPersonas{
+  display:flex;
+flex-direction:column;
+  gap:20px;
+  width:100%;
+   margin-left:-40px; 
+}
+
+.itemPersona{
+  background:#e2e8f0;
+  padding:18px 25px;
+  border-radius:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.12);
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  width:100%;
+  box-sizing:border-box;
+
+  transition:0.25s;
+}
+
+.itemPersona:hover{
+  transform:translateY(-3px);
+}
+
+
+/* TEXTO */
+.infoPersona{
+  display:flex;
+  align-items:center;
+  gap:25px;
+  font-size:16px;
+  flex-wrap:wrap;
+}
+
+.oculto {
+    display: none;
+}
+
+button:active{
+  transition: none;
+}
+
+button:disabled {
+  background-color: #e0e0e0;
+  color: #888;
+  cursor: not-allowed;
+  transform: scale(0.98);
+}
+body { 
+font-family: Arial; 
+background:#f2f2f2;
+}
+
+.seccion{
+display:none;
+  max-width:1000px;
+  margin:40px auto;
+
+  background: transparent; /* 👈 AQUÍ */
+  padding:30px;
+
+  border-radius:20px;
+  box-shadow:none; /* 👈 quita sombra también */
+}
+
+.seccion.activo{
+  display:block;
+}
+
+/* CONTENEDOR */
+.contenedorPozos{
+  display:flex;
+  gap:25px;
+  align-items:flex-start;
+  flex-wrap:wrap;
+
+  width:100%;
+}
+
+/* PANEL IZQUIERDO */
+.panelIzq{
+width:320px;
+}
+
+/* PANEL DERECHO */
+.panelDer{
+flex:1;
+}
+
+
+.contenedorTarifa{
+display:flex;
+gap:40px;
+margin-top:20px;
+}
+
+.panelEntrada{
+width:320px;
+}
+
+.panelResultado{
+flex:1;
+}
+
+
+.panelResultado h3{
+color:#2e7d32;
+margin-top:18px;
+}
+
+.panelCalculo{
+display:flex;
+gap:30px;
+margin-top:20px;
+align-items:flex-start;
+}
+
+/* PANEL INPUTS (IZQUIERDA) */
+.panelInputs{
+width:320px;
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 3px 8px rgba(0,0,0,0.08);
+}
+
+/* RESULTADOS (DERECHA) */
+.panelResultados{
+flex:1;
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 3px 8px rgba(0,0,0,0.08);
+border-left:6px solid #2e7d32;
+line-height:1.7;
+font-size:14px;
+}
+
+.panelResultados h3{
+color:#2e7d32;
+margin-top:18px;
+margin-bottom:8px;
+font-size:18px;
+border-bottom:1px solid #eee;
+padding-bottom:4px;
+}
+
+.panelInputs input{
+width:150px;
+padding:6px;
+border:1px solid #ccc;
+border-radius:5px;
+margin-bottom:8px;
+}
+
+.panelInputs span{
+margin-left:6px;
+font-size:13px;
+color:#666;
+}
+
+.panelInputs button{
+padding:8px 12px;
+border-radius:6px;
+border:1px solid #ccc;
+cursor:pointer;
+background:#f5f5f5;
+}
+
+.panelInputs button:hover{
+background:#e9e9e9;
+}
+
+.panelInputs button:first-of-type{
+background:#2e7d32;
+color:white;
+border:none;
+}
+
+.panelInputs button:first-of-type:hover{
+background:#256628;
+}
+
+
+
+.panelResultados{
+flex:1;
+background:#f7f7f7;
+padding:20px;
+border-left:5px solid #2e7d32;
+line-height:1.6;
+font-size:14px;
+}
+
+.panelResultados h3{
+color:#2e7d32;
+margin-top:18px;
+margin-bottom:5px;
+}
+.pozoCard{
+background:white;
+border:1px solid #ddd;
+border-radius:8px;
+padding:12px;
+margin-bottom:12px;
+box-shadow:0 2px 5px rgba(0,0,0,0.08);
+}
+
+.pozoTitulo{
+display:flex;
+align-items:center;
+gap:10px;
+font-weight:bold;
+margin-bottom:6px;
+}
+
+.pozoResultados{
+margin-left:30px;
+color:#2e7d32;
+line-height:1.5;
+font-size:14px;
+}
+.pozoBotones button{
+margin-right:5px;
+padding:4px 8px;
+border-radius:4px;
+border:1px solid #bbb;
+background:#f5f5f5;
+cursor:pointer;
+}
+
+.pozoBotones button:hover{
+background:#e8e8e8;
+}
+
+.grupoInput{
+display:flex;
+flex-direction:column;
+margin-bottom:10px;
+}
+
+.grupoInput label{
+font-size:13px;
+color:#555;
+margin-bottom:3px;
+}
+
+.grupoInput input{
+padding:7px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+.btnGuardarRegistro{
+  background:#2e7d32;
+  color:white;
+  padding:12px 18px;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.btnGuardarRegistro:hover{
+  background:#256628;
+  transform:scale(1.03);
+}
+h2{
+  font-size:30px;
+  margin-bottom:1px;
+}
+
+h3{
+  font-size:25px;
+  color:#000000;
+  margin-bottom:15px;
+}
+.tituloLista{
+margin-top:20px;
+}
+
+.listaRegistros{
+list-style:none;
+padding:0;
+}
+
+.itemMes{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:white;
+  padding:18px 20px;
+  margin-bottom:15px;
+  border-radius:12px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.08);
+  transition:all 0.25s ease;
+  border-left:6px solid #2e7d32;
+}
+
+.itemMes:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 25px rgba(0,0,0,0.12);
+}
+
+.nombreMes{
+  font-size:18px;
+  font-weight:600;
+}
+.panelFormularioPozo{
+background: linear-gradient(135deg, #1e5b4f, #dadadb);
+padding:20px;
+border-radius:10px;
+box-shadow:0 3px 8px rgba(0,0,0,0.08);
+width:320px;
+}
+.panelFormulario input{
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  margin-top:5px;
+  margin-bottom:15px;
+  font-size:14px;
+}
+
+.panelFormulario input:focus{
+  border-color:#2e7d32;
+  outline:none;
+  box-shadow:0 0 0 2px rgba(46,125,50,0.2);
+  
+}
+#listaReportesExternos{
+  flex:1;
+  overflow-y:auto;
+  padding-right:5px;
+}
+#pantallaReportes .panelListaPozos{
+  width:93%;
+  max-width:1000px;
+  margin:auto;
+  overflow-y: auto; 
+}
+.panelListaPozos{
+  flex:1;
+  background: linear-gradient(200deg, #1e5b4f, #dadadb);
+  padding:20px;
+  border-radius:15px;
+
+  width:100%;
+  box-sizing:border-box;
+
+  height:500px;        /* 🔥 ALTURA FIJA (ajústala) */
+  max-height:600px;    /* 🔥 evita que crezca */
+
+  display:flex;
+  flex-direction:column;
+
+  overflow:hidden;     /* 🔥 importante */
+}
+#listaPersonas{
+  flex:1;
+  overflow-y:auto;  /* 👈 aquí vive el scroll */
+  padding-right:5px;
+  overscroll-behavior: contain;
+}
+
+#resultadoComparacion{
+  padding:10px 15px;
+  border-radius:8px;
+  background:#f5f5f5;
+  display:flex;
+  align-items:center; /* 👈 centra vertical */
+  gap:10px;
+  min-height:40px; /* 👈 evita que se corte */
+}
+
+.grupoInput{
+display:flex;
+flex-direction:column;
+margin-bottom:12px;
+}
+
+.grupoInput label{
+font-size:13px;
+color:#666;
+margin-bottom:3px;
+}
+
+.grupoInput input{
+padding:7px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+.botonesFormulario{
+display:flex;
+gap:8px;
+margin-top:10px;
+}
+
+.btnGuardar{
+background:#000000;
+color:white;
+border:none;
+padding:8px 10px;
+border-radius:5px;
+cursor:pointer;
+}
+
+.btnGuardar:hover{
+background:#9d9d9d;
+}
+
+.btnExcel{
+background:#03e957;
+  color:white;
+  border:none;
+  padding:10px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+  transition:0.2s;
+}
+
+.btnExcel:hover{
+background:#a0eaa6;
+  transform:translateY(-1px);
+}
+
+.btnVolver{
+margin-top:12px;
+background:#f0f0f0;
+border:1px solid #ccc;
+padding:7px;
+border-radius:5px;
+cursor:pointer;
+}
+
+.btnVolver:hover{
+background:#e5e5e5;
+}
+
+.contenedorRegistros{
+  display:flex;
+  justify-content:center;
+  align-items:flex-start; /* 🔥 alineados arriba */
+  gap:40px;
+
+  width:100%;
+}
+
+/* PANEL IZQUIERDO */
+.panelLista{
+  width:350px; /* 👈 ancho fijo más compacto */
+}
+
+/* PANEL DERECHO */
+.panelFormulario{
+  width:320px;
+  padding:25px;
+  border-radius:20px;
+background: linear-gradient(135deg, #1e5b4f, #f1f5f9);
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+
+.listaRegistros{
+list-style:none;
+padding:0;
+}
+body{
+    min-height: 100vh;
+  background:#eef2f5; /* más moderno que gris plano */
+}
+.itemMes{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 16px;
+  margin-bottom:10px;
+  border-radius:10px;
+  background:white;
+  box-shadow:0 2px 6px rgba(0,0,0,0.06);
+  transition:0.2s;
+  font-size:14px;
+}
+
+.itemMes:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 12px rgba(0,0,0,0.1);
+}
+.listaRegistros li{
+background:white;
+border:1px solid #ddd;
+padding:12px;
+margin-bottom:10px;
+border-radius:6px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.gridCalculos{
+display:grid;
+grid-template-columns:repeat(auto-fit, minmax(200px,1fr));
+gap:15px;
+margin-top:20px;
+margin-bottom:20px;
+}
+
+.btnCalculo{
+background:#ffffff;
+border:1px solid #ddd;
+border-radius:8px;
+padding:15px;
+font-size:15px;
+cursor:pointer;
+box-shadow:0 2px 5px rgba(0,0,0,0.08);
+transition:all 0.2s;
+}
+
+/* BOTON BLOQUEADO */
+.btnCalculo:disabled{
+background:#e0e0e0;
+color:#9e9e9e;
+border:1px solid #cfcfcf;
+box-shadow:none;
+cursor:not-allowed;
+}
+
+.btnCalculo:hover:not(:disabled){
+transform:translateY(-2px);
+box-shadow:0 4px 10px rgba(0,0,0,0.12);
+}
+
+.btnCalculo:disabled{
+background:#e0e0e0;
+color:#9e9e9e;
+border:1px solid #cfcfcf;
+box-shadow:none;
+cursor:not-allowed;
+opacity:0.8;
+}
+
+.btnVolverMenu{
+margin-top:10px;
+padding:8px 12px;
+background:#f0f0f0;
+border:1px solid #ccc;
+border-radius:5px;
+cursor:pointer;
+}
+#menuCalculos{
+visibility:hidden;
+}
+.btnCalculo:disabled{
+background:#e0e0e0 !important;
+color:#9e9e9e !important;
+border:1px solid #cfcfcf !important;
+box-shadow:none !important;
+cursor:not-allowed;
+opacity:0.7;
+}
+
+.btnCalculo:disabled:hover{
+transform:none;
+box-shadow:none;
+}
+
+.encabezadoSistema{
+width:100%;
+text-align:center;
+margin-top:10px;
+margin-bottom:10px;
+}
+
+.logoSener{
+display:block;
+margin:auto;
+width:300px;
+margin-bottom:15px;
+}
+.comparador{
+  display:flex;
+  flex-wrap:wrap; /* 👈 permite que bajen */
+  gap:10px;
+  margin-bottom:15px;
+}
+
+/* SELECTS */
+.comparador select{
+  flex:1 1 200px; /* 👈 se adaptan */
+  min-width:150px;
+  padding:8px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+
+/* BOTONES */
+.comparador button{
+  flex:1 1 150px; /* 👈 bajan si no caben */
+  min-width:140px;
+}
+@media (max-width: 600px){
+
+  .comparador{
+    flex-direction:column; /* 👈 todo vertical */
+  }
+
+  .comparador select,
+  .comparador button{
+    width:100%; /* 👈 ocupan todo el ancho */
+  }
+
+}
+#resultadoComparacion{
+  margin-top:10px;
+  background:transparent;
+  padding:10px;
+
+}
+
+.loginContainer{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:25px;
+  min-height:100vh;
+}
+/* CONTENEDOR CENTRADO */
+
+.loginContainer,
+.loginContainere{
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:center;
+  gap:20px;
+}
+
+.loginContainere{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:transparent; /* 👈 quita el cuadro */
+}
+
+.loginCardlogo{
+  width:100%;
+  max-width:800px;
+
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.15);
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.loginCardacc input{
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:14px;
+  transition:0.2s;
+}
+
+.loginCard,
+.loginCardacc,
+.loginCardi{
+  background:rgba(255, 255, 255, 0.608);
+  padding:40px;
+  border-radius:15px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    width:100%;
+  max-width:500px;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+  text-align:center;
+}
+
+/* INPUTS de iniciar sesion cajitas */
+.loginCardi input{
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:14px;
+  transition:0.2s;
+}
+
+
+ /*Tarjeta de Registro estados*/
+.loginCarde{
+  background: transparent;
+  padding:40px;
+  border-radius:15px;
+
+
+  width:90%;
+  max-width:1200px;
+
+  display:flex;
+  flex-direction:column; /* 🔥 IMPORTANTE */
+  gap:30px;
+
+  margin:auto;
+}
+ /*Tarjeta de Registro estados*/
+.loginCardes {
+background: transparent;
+padding: 40px;
+border-radius: 15px;
+
+width: 800px;
+
+display: flex;              /* activa flex */
+flex-direction: column;     /* elementos en vertical */
+align-items: center;        /* centra horizontal */
+justify-content: center;    /* centra vertical */
+
+gap: 15px;
+text-align: center;
+
+
+margin-left: auto;
+margin-right: auto;
+}
+.loginCardesen {
+background: transparent;
+padding: 40px;
+border-radius: 15px;
+
+width: 800px;
+
+display: flex;              /* activa flex */
+flex-direction: column;     /* elementos en vertical */
+align-items: center;        /* centra horizontal */
+justify-content: center;    /* centra vertical */
+
+gap: 15px;
+text-align: left;
+
+
+margin-left: auto;
+margin-right: auto;
+}
+
+.loginCardesin {
+background: transparent;
+padding: 40px;
+border-radius: 15px;
+
+width: 800px;
+
+display: flex;              /* activa flex */
+flex-direction: column;     /* elementos en vertical */
+align-items: center;        /* centra horizontal */
+justify-content: center;    /* centra vertical */
+
+gap: 15px;
+text-align: left;
+
+
+margin-left: auto;
+margin-right: auto;
+}
+/* INPUTS */
+.loginCard input{
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:14px;
+  transition:0.2s;
+}
+
+.loginCard input:focus{
+  border-color:#2e7d32;
+  outline:none;
+  box-shadow:0 0 0 3px rgba(46,125,50,0.2);
+}
+
+/* BOTÓN PRINCIPAL */
+.btnLogin{
+  background:#058ee3;
+  color:white;
+  border:none;
+  padding:12px;
+  border-radius:8px;
+  
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.btnLogin:hover{
+  background:#0623e1;
+  transform:translateY(-1px);
+}
+
+/* BOTÓN SECUNDARIO */
+.btnSecundario{
+  background:#64b82c;
+  color:white;
+  border:none;
+  padding:10px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.btnSecundario:hover{
+  background:#0b5904;
+}
+body{
+  background: linear-gradient(135deg, #002f2a, #98989a);
+  margin:0;
+  padding:20px;
+}
+.modal{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+
+
+
+.accionesModal{
+  display:flex;
+  gap:10px;
+  justify-content:flex-end;
+}
+
+.btnGuardarModal{
+  background:#22c55e;
+  color:white;
+  border:none;
+  padding:10px 15px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.btnGuardarModal:hover{
+  background:#16a34a;
+}
+
+.btnCancelarModal{
+  background:#f1f5f9;
+  border:none;
+  padding:10px 15px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.btnCancelarModal:hover{
+  background:#e2e8f0;
+}
+
+.oculto{
+  display:none;
+}
+.tiempoAct{
+  float:right;
+  font-size:12px;
+  color:#444;
+}
+
+.miniItem{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:4px 0;
+}
+
+/* 🔴 actividad lenta */
+.miniItem.lenta{
+  color:#dc2626;
+  font-weight:bold;
+}
+
+/* 🔥 indicador visual */
+.miniItem.lenta::after{
+  content:" ⏰";
+}
+.miniItem.roja{
+  color:#dc2626;
+  font-weight:bold;
+}
+
+.miniItem.amarilla{
+  color:#f59e0b;
+  font-weight:bold;
+}
+
+.miniItem.verde{
+  color:#16a34a;
+  font-weight:bold;
+}
+.headerSistema{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:70px;
+  background:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  z-index:1000;
+}
+
+.logoGlobal{
+  height:69px;
+  object-fit:contain;
+  
+}
+
+.header-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+     margin-bottom: 0;
+     
+}
+
+.logo{
+  width:300px;
+  height:auto;
+}
+
+.titulo-header {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+@media (max-width: 768px){
+
+  .loginCard,
+  .loginCardacc,
+  .loginCardi,
+  .loginCardlogo,
+  .loginCarde,
+  .loginCardes,
+  .loginCardesen,
+  .loginCardesin{
+
+    width:90%;
+    padding:20px;
+  }
+
+  .logo{
+  width:300px;
+  height:auto;
+  object-fit:contain;
+}
+
+}
+
+.loginCarde .loginCardlogo{
+  max-width:93%;
+}
+</style>
+</head>
+
+<!-- ================= ADMINISTRADOR  ================= -->
+
+
+<body>
+<div id="inicio" class="seccion activo">
+
+  <!-- BOTON ADMIN ARRIBA DERECHA -->
+  <button class="btnAdminEsquina" onclick="irAdmin()">
+    👑 Soy Admin
+  </button>
+
+  <div class="loginContainere">
+
+    <!-- LOGO -->
+    <div class="loginCardlogos">
+      <div class="header-card">
+        <img src="conuee.png" class="logos">
+      </div>
+    </div>
+
+    <!-- LOGIN USUARIO DIRECTO -->
+    <div class="loginCardacc">
+
+      <h2>👷 Acceso Usuario</h2>
+
+      <input id="correoUsuario" placeholder="Correo">
+
+      <div style="position:relative;">
+        <input id="passwordUsuario" type="password" placeholder="Contraseña">
+
+        <span onclick="togglePasswordUsuario()" 
+          style="
+          position:absolute;
+          right:10px;
+          top:50%;
+          transform:translateY(-50%);
+          cursor:pointer;">
+          👁
+        </span>
+      </div>
+
+      <button class="btnSecundario" onclick="loginUsuario()">
+        Entrar
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+<!-- ================= EDITAR PERSONA  ================= -->
+
+
+
+<div id="modalEditar" class="modal oculto">
+
+  <div class="modalContenido">
+    <h3>✏️ Editar Persona</h3>
+
+    <input id="editNombre" placeholder="Nombre">
+    <input id="editPuesto" placeholder="Puesto">
+
+    <div class="accionesModal">
+      <button class="btnCancelarModal" onclick="cerrarModal()">❌ Cancelar</button>
+      <button class="btnGuardarModal" onclick="guardarEdicion()">💾 Guardar</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= USUARIO  ================= -->
+<div id="loginUsuario" class="seccion">
+
+  <div class="loginContainer">
+    <div class="loginCardacc">
+
+   <h2>👷 Acceso Usuario</h2>
+
+<input id="correoUsuario" placeholder="Correo" autocomplete="off">
+
+<div style="position:relative;">
+  <input id="passwordUsuario" type="password" placeholder="Contraseña" autocomplete="new-password">
+
+  <span onclick="togglePasswordUsuario()" 
+        style="
+        position:absolute;
+        right:10px;
+        top:50%;
+        transform:translateY(-50%);
+        cursor:pointer;
+        font-size:14px;">
+    👁
+  </span>
+</div>
+
+<button class="btnLogin" onclick="loginUsuario()">Entrar</button>
+<button onclick="logout()" class="btnRojo">Volver</button>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= VIZUALIZAR REGISTRO ADMINISTRADOR Y REGISTRO DE CORREOS  ================= -->
+<div id="loginAdmin" class="seccion">
+<div class="loginContainer">
+
+       <div class="loginCardlogos">
+<div class="header-card">
+    <img src="conuee.png" class="logos">
+</div>
+</div>
+
+  <div class="loginCardi">
+    
+    <h2>🔐 Iniciar sesión</h2>
+
+    <input id="correo" placeholder="Correo electrónico">
+   <div style="position:relative;">
+  <input id="password" type="password" placeholder="Contraseña">
+
+  <span onclick="togglePassword()" 
+        style="
+        position:absolute;
+        right:10px;
+        top:50%;
+        transform:translateY(-50%);
+        cursor:pointer;
+        font-size:14px;">
+    👁
+  </span>
+</div>
+
+    <button class="btnLogin" onclick="loginAdmin()">Entrar</button>
+    <button onclick="logout()" class="btnRojo">Volver</button>
+   <!-- <button class= "btnRojos"  onclick="crearAdminsSeguro()">🚀 Cargar admins</button>-->
+  </div>
+
+</div>
+</div>
+
+<!-- ================= REGISTROS  ================= -->
+
+
+<div id="registros" class=" seccion">
+
+  <div class="loginCarde">
+
+      <div class="loginCardlogos">
+      <div class="header-card">
+        <img src="conuee.png" class="logos">
+      </div>
+    </div>
+    
+<div class="contenedorRegistros">
+
+<!-- IZQUIERDA -->
+ 
+<div class="panelListaPozos">
+<div class="encabezadoSistema">
+</div>
+  
+<h3 class="tituloLista">Estados:</h3>
+<ul id="listaRegistros" class="listaRegistros"></ul>
+
+</div>
+
+
+<!-- DERECHA -->
+<div class="panelFormularioPozo" id="panelAdmin">
+
+<div class="formActividad">
+<h3 id="bienvenidaAdmin"> Bienvenido</h3>
+<h2>Registro de nuevo Estado</h2>
+
+
+
+<div class="grupoCampo">
+<label>Estado:</label>
+<input id="MES" placeholder="Ej. Toluca">
+</div>
+
+<div class="grupoCampo">
+<label>Fecha:</label>
+<input type="date" id="fecha">
+</div>
+
+<button class="btnVerde" onclick="guardarRegistro();">
+Guardar registro
+</button>
+<button onclick="logout()" class="btnRojo">Cerrar sesión</button>
+</div>
+
+</div>
+
+</div>
+</div>
+</div>
+
+
+
+<!-- ================= AGREGAR EDICIOS ================= -->
+<div id="pozos" class="seccion">
+ <div class="loginCarde">
+     <div class="loginCardlogos">
+      <div class="header-card">
+        <img src="conuee.png" class="logos">
+      </div>
+    </div>
+<div class="contenedorPozos">
+
+  <!-- IZQUIERDA -->
+  <div class="colIzquierda">
+
+    <div class="panelFormularioPozo">
+      <h2 id="tituloMes"></h2>
+
+      <div class="formActividad">
+        <h3>Agregar Edificio:</h3>
+
+        
+
+       <div class="botonesForm">
+  <button class="btnVerde" onclick="irFormularioEdificio()">➕ Ir formulario de registro </button>
+<button class="btnRojo" onclick="volverSegunRol()">
+⬅ Volver
+</button>
+</div>
+      </div>
+    </div>
+<br>
+ 
+  </div>
+
+  <!-- DERECHA -->
+  <div class="panelListaPozos">
+    <h2>Reportes</h2>
+    <h3>Edificios registrados:</h3>
+    <ul id="listaPersonas" class="listaPersonas"></ul>
+  </div>
+
+</div>
+</div>
+</div>
+  
+<!-- Registro Parte 1 -->
+<div id="formEdificio" class="seccion">
+<div class="loginCardes">
+
+  
+    <div class="loginCardlogos">
+      <div class="header-card">
+        <img src="conuee.png" class="logos">
+      </div>
+    </div>
+    
+  <div class="panelFormulario">
+    <h2>🏢 Nuevo Edificio</h2><br>
+
+    <div class="grupoCampo">
+      <label>Nombre del funcionario responsable del registro del edificio:</label>
+      <input id="responsableEdificio">
+    </div>
+
+
+    <div class="grupoCampo">
+      <label>Alcance:</label>
+      <select id="tipoEdificio">
+        <option>Programa Estatal</option>
+        <option>Programa Municipal</option>
+      </select>
+    </div><br>
+
+    <div class="grupoCampo">
+      <label>Dependencia responsable:</label>
+      <input id="dependenciaEdificio">
+    </div>
+
+    <div class="grupoCampo">
+      <label>Meta anual de ahorro energético (%) del Programa:</label>
+      <input id="metaEdificio">
+    </div>
+
+    <button class="btnVerde" onclick="guardarParte1()">Siguiente ➡</button>
+   <button class="btnRojo" onclick="mostrar('pozos')">⬅ Volver</button>
+  </div>
+
+</div>
+</div>
+<!-- Registro Parte 2 -->
+<div id="formEdificioParte2" class="seccion">
+<div class="loginCardes">
+
+    <div class="loginCardlogos">
+      <div class="header-card">
+        <img src="conuee.png" class="logos">
+      </div>
+    </div>
+    
+  <div class="panelFormulario">
+    <h2>Información del edificio </h2><br>
+
+    <div class="grupoCampo">
+      <label>Nombre o identificación del edificio:</label>
+      <input id="nombreedificio">
+    </div>
+
+
+    <div class="grupoCampo">
+      <label>Localización del edificio:</label>
+      <input id="localedificio">
+    </div>
+
+    <div class="grupoCampo">
+      <label>Superficie total construida (m2):</label>
+      <input id="superficiem2">
+    </div>
+
+     <div class="grupoCampo">
+      <label>Número de niveles en el edificio:</label>
+      <input id="numniveles">
+    </div>
+
+    <div class="grupoCampo">
+      <label>Cuenta con equipo(s) de acondicionamiento de aire:</label>
+      <select id="tipoEnergia">
+        <option>Si</option>
+        <option>No</option>
+      </select>
+    </div><br>
+
+    <div class="grupoCampo">
+      <label>Horas laboral por día en el edificio:</label>
+      <input id="hrslaboral">
+    </div>
+
+    <div class="grupoCampo">
+      <label>Días de operación en el edificio a la semana:</label>
+      <input id="diaslaboral">
+    </div>
+
+<br>
+    <button class="btnVerde" onclick="guardarParte2()">Siguiente ➡</button>
+    <button class="btnRojo" onclick="mostrar('formEdificio')">⬅ Volver</button>
+  </div>
+
+</div>
+</div>
+
+
+<!-- Registro Parte 3 -->
+<div id="formEdificioParte3" class="seccion">
+<div class="loginCardes">
+
+    <div class="loginCardlogos">
+      <div class="header-card">
+        <img src="conuee.png" class="logos">
+      </div>
+    </div>
+    
+  <div class="panelFormulario">
+    <h2>Información de consumo eléctrico</h2><br>
+
+    <div class="grupoCampo">
+      <label> Tarifa eléctrica:</label>
+      <input id="tarifelectric">
+    </div>
+
+
+    <div class="grupoCampo">
+      <label>Consumo eléctrico total del año calendario anterior en KWh (Línea Base) [KWh]:</label>
+      <input id="consumlineabase">
+    </div>
+
+    <div class="grupoCampo">
+      <label>Facturación eléctrica total del año calendario anterior [$]:</label>
+      <input id="factlineabse">
+    </div>
+
+    <button class="btnVerde" onclick="guardarParte3()">Siguiente ➡</button>
+    <button class="btnRojo" onclick="mostrar('formEdificioParte2')">⬅ Volver</button>
+  </div>
+
+</div>
+</div>
+
+<!-- Registro Parte 4 -->
+<div id="formEdificioParte4" class="seccion">
+<div class="loginCardes">
+
+    <div class="loginCardlogos">
+      <div class="header-card">
+        <img src="conuee.png" class="logos">
+      </div>
+    </div>
+    
+  <div class="panelFormulario">
+    <h2>Información de consumo eléctrico</h2><br>
+
+     <div class="grupoCampo">
+      <label>Su linea base es:<br><br>
+       -Tarifa mensual: Enero - Diciembre 2024, febrero 2023 - Enero 2024, Octubre 2024 - Septiembre 2025, etc.<br><br>
+       -Tarifa bimestral: Septiembre 2023 - Septiembre 2024, Marzo 2024 - Marzo 2025, octubre 2024 - octubre 2025 ,etc.
+
+      </label><br>
+      <select id="lineabase">
+        <option>Mensual</option>
+        <option>Bimestral</option>
+      </select>
+    </div><br>
+
+
+    <button class="btnVerde" onclick="guardarParte4()">Siguiente ➡</button>
+    <button class="btnRojo" onclick="mostrar('formEdificioParte3')">⬅ Volver</button>
+  </div>
+
+</div>
+</div>
+
+<!-- REPORTES listado -->
+<div id="pantallaReportes" class="seccion">
+    
+<div class="loginCarde">
+
+    <div class="loginCardlogos">
+      <div class="header-card">
+        <img src="conuee.png" class="logos">
+      </div>
+    </div>
+
+  <div class="panelListaPozos">
+
+    <h2>📊 Reportes del edificio</h2><br>
+
+    <div style="display:flex; gap:10px; margin-bottom:15px;">
+      <button class="btnRojo" onclick="cancelarEdificio()">⬅ Volver</button>
+      <button class="btnVerde" onclick="irAgregarReporte()">➕ Agregar reporte</button>
+    </div>
+
+    <div id="listaReportes"></div>
+
+  </div>
+
+</div>
+</div>
+
+<!-- REPORTES de edificos Parte 1 -->
+<div id="reporteParte1" class="seccion">
+
+  <div class="panelFormulario">
+    <h2>📊 Reporte - Parte 1</h2>
+
+    <p><strong>Responsable:</strong> <span id="verResponsable"></span></p><br>
+
+    <div class="grupoCampo">
+      <label>Reporte general:</label>
+      <input id="reporte1">
+    </div>
+
+    <button class="btnVerde" onclick="repParte2()">Siguiente ➡</button>
+   <button class="btnRojo"
+onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
+⬅ Volver
+</button>
+  </div>
+
+</div>
+
+<!-- REPORTES de edificos Parte 2 -->
+<div id="reporteParte2" class="seccion">
+
+  <div class="panelFormulario">
+    <h2>⚡ Reporte - Parte 2</h2>
+
+    <div class="grupoCampo">
+      <label>Consumo energético:</label>
+      <input id="reporte2">
+    </div>
+
+    <button class="btnVerde" onclick="repParte3()">Siguiente ➡</button>
+    <button class="btnRojo" onclick="mostrar('reporteParte1')">⬅ Volver</button>
+  </div>
+
+</div>
+
+ <!-- REPORTES de edificos Parte 3 -->
+<div id="reporteParte3" class="seccion">
+
+  <div class="panelFormulario">
+    <h2>🏢 Reporte - Parte 3</h2>
+
+    <div class="grupoCampo">
+      <label>Comentarios finales:</label>
+      <input id="rep3">
+    </div>
+
+    <button class="btnVerde" onclick="repConfirmacion()">Finalizar ➡</button>
+    <button class="btnRojo" onclick="mostrar('reporteParte2')">⬅ Volver</button>
+  </div>
+
+</div>
+ <!-- REPORTES de edificos CONFIRMACION -->
+  <div id="reporteConfirmacion" class="seccion">
+
+  <div class="panelFormulario">
+    <h2>📋 Confirmación del reporte</h2>
+
+    <div id="resumenReporte"></div>
+
+    <button class="btnVerde" onclick="guardarReporteFinal()">💾 Guardar</button>
+    <button class="btnRojo" onclick="mostrar('reporteParte3')">⬅ Volver</button>
+  </div>
+
+</div>
+
+<!-- Confrimacion -->
+<div id="formEdificioParteC" class="seccion">
+<div class="loginContainer">
+
+  
+  <div class="panelFormulario">
+
+      <div class="loginCardlogos">
+      <div class="header-card">
+        <img src="conuee.png" class="logos">
+      </div>
+    </div>
+
+    <h2>📋 Confirmación</h2>
+
+    <div id="resumenEdificio"></div>
+<br>
+    <button class="btnVerde" onclick="guardarTodoEdificio()">💾 Guardar</button>
+    <button class="btnRojo" onclick="mostrar('formEdificioParte3')">⬅ Volver</button>
+  </div>
+
+</div>
+</div>
+
+
+<div id="modalActividad" class="modal oculto">
+
+  <div class="modalContenido">
+    <h3>✏️ Editar Actividad</h3>
+
+    <input id="editActNombre" placeholder="Actividad">
+
+    <label>Fecha inicio</label>
+    <input type="date" id="editActFecha">
+
+    <label>Hora inicio</label>
+    <input type="time" id="editActInicio">
+
+    <label>Fecha fin</label>
+    <input type="date" id="editActFechaFin">
+
+    <label>Hora fin</label>
+    <input type="time" id="editActFin">
+
+    <div class="accionesModal">
+      <button class="btnCancelarModal" onclick="cerrarModalActividad()">❌ Cancelar</button>
+      <button class="btnGuardarModal" onclick="guardarActividadEditada()">💾 Guardar</button>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- Reporte de no pertencia al programa -->
+<div id="reporteExterno" class="seccion">
+<div class="loginCardesen">
+<div class="loginCardlogos">
+      <div class="header-card">
+        <img src="conuee.png" class="logos">
+      </div>
+    </div>
+
+  <div class="contenedorRegistros">
+
+    <!-- IZQUIERDA -->
+    <div class="panelListaPozos">
+      <h3>📋 Reportes enviados</h3>
+      <div id="listaReportesExternos"></div>
+    </div>
+
+    <!-- DERECHA -->
+    <div class="panelFormulario">
+
+      <h2>📋 Nuevo reporte</h2><br>
+
+      <div class="grupoCampo">
+        <label>Nombre del responsable:</label>
+        <input id="nombreExt">
+      </div>
+
+      <div class="grupoCampo">
+        <label>Dirección del edificio:</label>
+        <input id="direccionExt">
+      </div>
+
+      <div class="grupoCampo">
+        <label>Cosas a reportar:</label>
+        <textarea id="reporteExt" rows="4"></textarea>
+      </div><br>
+
+      <button class="btnVerde" onclick="guardarReporteExterno()">
+        Guardar
+      </button>
+
+     <button class="btnRojo" onclick="volverSegunRol()">
+⬅ Volver
+</button>
+
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<div id="seleccionReporte" class="seccion">
+
+  <div class="loginCardes">
+
+    <div class="loginCardlogos">
+      <div class="header-card">
+        <img src="conuee.png" class="logos">
+      </div>
+    </div>
+
+    <div class="panelFormulario">
+
+      <h2>📋 ¿Qué deseas reportar?</h2><br>
+
+      <div class="botonesForm">
+
+        <button class="btnVerde" onclick="abrirReporte('alumbrado')">
+          💡 Alumbrado
+        </button>
+
+        <button class="btnVerde" onclick="abrirReporte('bombeo')">
+          🚰 Bombeo
+        </button>
+
+       <button class="btnVerde" onclick="preguntarPrograma(registroActivo.id)">
+       🏢 Edificios
+      </button>
+
+        <button class="btnVerde" onclick="abrirReporte('transporte')">
+          🚌 Transporte
+        </button>
+
+        <button class="btnVerde" onclick="abrirReporte('otro')">
+          📦 Otro
+        </button>
+
+        <button type="button" class="btnRojo btnSoloUsuario" onclick="accionBotonRojo()">
+  ⬅ Volver
+</button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<div id="reporteGeneral" class="seccion">
+
+  <div class="loginCarde">
+
+    <!-- LOGO -->
+    <div class="loginCardlogos">
+      <div class="header-card">
+        <img src="conuee.png" class="logos">
+      </div>
+    </div>
+
+    <div class="contenedorRegistros">
+
+      <!-- IZQUIERDA -->
+      <div class="panelFormulario">
+
+        <h2 id="tituloReporteGeneral">📋 Reporte</h2><br>
+
+        <!-- SOLO OTRO -->
+        <div class="grupoCampo" id="campoCategoria" style="display:none;">
+          <label>Categoría:</label>
+          <input id="categoriaReporte">
+        </div>
+
+        <div class="grupoCampo">
+          <label>Nombre del proyecto:</label>
+          <input id="nombreReporte">
+        </div>
+
+        <div class="grupoCampo">
+          <label>Responsable:</label>
+          <input id="responsableReporte">
+        </div>
+
+        <div class="grupoCampo">
+          <label>Fecha:</label>
+          <input type="date" id="fechaReporteGeneral">
+        </div>
+
+        <div class="grupoCampo">
+          <label>Dependencia:</label>
+          <input id="dependenciaReporte">
+        </div>
+
+        <div class="grupoCampo">
+          <label>Cosas a reportar:</label>
+          <textarea id="textoReporteGeneral" rows="5"></textarea>
+        </div><br>
+
+        <button class="btnVerde" onclick="guardarReporteSimple()">
+          💾 Guardar
+        </button>
+
+    <button class="btnRojo" onclick="volverDesdeReportes()">
+  ⬅ Volver
+</button>
+
+      </div>
+
+      <!-- DERECHA -->
+      <div class="panelListaPozos" style="height:600px;">
+
+        <h2>📋 Reportes guardados</h2><br>
+
+        <div id="contenedorReportesGenerales"></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div id="modalPrograma" class="modal oculto">
+  <div class="modalContenido">
+    <h3>¿Pertenece al programa?</h3>
+
+    <div class="accionesModal">
+      <button class="btnGuardarModal" onclick="responderPrograma(true)">
+        ✅ Sí pertenece
+      </button>
+
+      <button class="btnCancelarModal" onclick="responderPrograma(false)">
+        ❌ No pertenece
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Modal contraseña de usuairo -->
+<div id="modalUsuarioCreado" class="modal oculto">
+  <div class="modalContenido">
+    <h3>✅ Usuario creado</h3>
+
+    <p><strong>Email:</strong> <span id="nuevoEmail"></span></p>
+    <p><strong>Password:</strong> <span id="nuevoPassword"></span></p>
+
+    <div class="accionesModal">
+      <button class="btnGuardarModal" onclick="cerrarModalUsuario()">
+        Aceptar
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="modalVerEdificio" class="modal oculto">
+   
+  <div class="modalContenido">
+
+    <div class="loginCardlogos">
+        <div class="header-card">
+        <img src="conuee.png" class="logos">
+        </div>
+    </div>
+
+   <div class="separador"></div>
+    
+    <h3>🏢 Información del edificio</h3>
+
+    <div id="detalleEdificio"></div>
+
+    <div class="accionesModal">
+      <button class="btnCancelarModal" onclick="cerrarModalEdificio()">
+        ❌ Cerrar
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div id="pantallaCategorias" class="seccion">
+
+  <div class="cardMenuAdmin"> <!-- 🔥 NUEVO CONTENEDOR -->
+
+    <h2 id="tituloCategorias">📋 Reportes</h2>
+
+    <div class="botonesForm">
+
+      <button class="btnMenu btnAlumbrado" onclick="verReportesAdmin('alumbrado')">
+        💡 Alumbrado
+      </button>
+
+      <button class="btnMenu btnBombeo" onclick="verReportesAdmin('bombeo')">
+        🚰 Bombeo
+      </button>
+
+      <button class="btnMenu btnTransporte" onclick="verReportesAdmin('transporte')">
+        🚌 Transporte
+      </button>
+
+      <button class="btnMenu btnOtro" onclick="verReportesAdmin('otro')">
+        📦 Otro
+      </button>
+
+      <button class="btnMenu btnEdificios" onclick="verEdificiosAdmin()">
+        🏢 Edificios
+      </button>
+
+      <button class="btnMenu btnCerrar" onclick="volverRegistros()">
+        ❌ Cerrar
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- reporte mensual 1    -->
+<div id="mensualParte1" class="seccion">
+<div class="loginCardes">
+
+   <div class="loginCardlogos">
+        <div class="header-card">
+        <img src="conuee.png" class="logos">
+        </div>
+    </div>
+    
+  <div class="panelFormulario">
+    <h2>📅 Mensual - Datos generales</h2><br>
+
+    <div class="grupoCampo">
+      <label>Funcionario responsable de emitir el reporte: </label>
+      <input id="m1_responsable">
+    </div>
+
+    <div class="grupoCampo">
+      <label>¿Durante el periodo se presento algún evento que modifico el consumo del edificio? (Justifica):</label>
+      <input id="m1_evento">
+    </div>
+
+    <button class="btnVerde" onclick="mostrar('mensualParte2')">Siguiente ➡</button>
+    <button class="btnRojo" onclick="volverAReportesDesdeMensual()">
+  ⬅ Volver
+</button>
+  </div>
+</div>
+</div>
+
+
+<!-- reporte mensual 2   -->
+<div id="mensualParte2" class="seccion">
+  <div class="loginCardes">
+
+     <div class="loginCardlogos">
+        <div class="header-card">
+        <img src="conuee.png" class="logos">
+        </div>
+    </div>
+
+<div class="panelFormulario">
+  <label><h2>Selecciona 2 meses</h2></label><br>
+
+  <div class="selectorModerno">
+    <div class="opcionMes" onclick="toggleMes(this,'ene')">Enero</div>
+    <div class="opcionMes" onclick="toggleMes(this,'feb')">Febrero</div>
+    <div class="opcionMes" onclick="toggleMes(this,'mar')">Marzo</div>
+    <div class="opcionMes" onclick="toggleMes(this,'abr')">Abril</div>
+    <div class="opcionMes" onclick="toggleMes(this,'may')">Mayo</div>
+    <div class="opcionMes" onclick="toggleMes(this,'jun')">Junio</div>
+    <div class="opcionMes" onclick="toggleMes(this,'jul')">Julio</div>
+    <div class="opcionMes" onclick="toggleMes(this,'ago')">Agosto</div>
+    <div class="opcionMes" onclick="toggleMes(this,'sep')">Septiembre</div>
+    <div class="opcionMes" onclick="toggleMes(this,'oct')">Octubre</div>
+    <div class="opcionMes" onclick="toggleMes(this,'nov')">Noviembre</div>
+    <div class="opcionMes" onclick="toggleMes(this,'dic')">Diciembre</div>
+  </div><br><br>
+
+
+<div id="inputsMeses"></div>
+<div style="margin-top:20px; display:flex; gap:10px;">
+
+<button class="btnVerde" onclick="llenarResumenMensual()">
+  Siguiente ➡
+</button>
+
+  <button class="btnRojo" onclick="mostrar('mensualParte1')">
+    ⬅ Volver
+  </button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- reporte mensual 3  -->
+<div id="mensualParte3" class="seccion">
+   <div class="loginCardes">
+
+     <div class="loginCardlogos">
+        <div class="header-card">
+        <img src="conuee.png" class="logos">
+        </div>
+    </div>
+    
+  <div class="panelFormulario">
+    <h2>📋 Confirmación mensual</h2>
+
+    <div id="resumenMensual"></div><br>
+
+    <button class="btnVerde" onclick="guardarReporteMensual()">💾 Guardar</button>
+    <button class="btnRojo" onclick="mostrar('mensualParte2')">⬅ Volver</button>
+  </div>
+</div>
+</div>
+
+<!-- reporte bimestral 1  -->
+<div id="bimestralParte1" class="seccion">
+ <div class="loginCardes">
+
+  <div class="loginCardlogos">
+        <div class="header-card">
+        <img src="conuee.png" class="logos">
+        </div>
+    </div>
+    
+  <div class="panelFormulario">
+    <h2>📅 Bimestral - Datos generales</h2><br>
+
+
+    <div class="grupoCampo">
+      <label>Funcionario responsable de emitir el reporte: </label>
+      <input id="b1_responsable">
+    </div>
+
+    <div class="grupoCampo">
+      <label>¿Durante el periodo se presento algún evento que modifico el consumo del edificio? (Justifica): </label>
+      <input id="b1_periodo">
+    </div>
+
+    <button class="btnVerde" onclick="mostrar('bimestralParte2')">Siguiente ➡</button>
+    <button class="btnRojo" onclick="volverABimestral()">
+  ⬅ Volver
+</button>
+  </div>
+</div>
+</div>
+
+
+<!-- reporte bimestral 2  -->
+ <div id="bimestralParte2" class="seccion">
+<div class="loginCardes">
+   <div class="loginCardlogos">
+        <div class="header-card">
+        <img src="conuee.png" class="logos">
+        </div>
+    </div>
+<div class="panelFormulario">
+<label><h2>Selecciona el rango de meses</h2></label><br>
+
+<div class="selectorModerno">
+  <div class="opcionMes" onclick="toggleMesBim(this,'ene')">Enero</div>
+  <div class="opcionMes" onclick="toggleMesBim(this,'feb')">Febrero</div>
+  <div class="opcionMes" onclick="toggleMesBim(this,'mar')">Marzo</div>
+  <div class="opcionMes" onclick="toggleMesBim(this,'abr')">Abril</div>
+  <div class="opcionMes" onclick="toggleMesBim(this,'may')">Mayo</div>
+  <div class="opcionMes" onclick="toggleMesBim(this,'jun')">Junio</div>
+  <div class="opcionMes" onclick="toggleMesBim(this,'jul')">Julio</div>
+  <div class="opcionMes" onclick="toggleMesBim(this,'ago')">Agosto</div>
+  <div class="opcionMes" onclick="toggleMesBim(this,'sep')">Septiembre</div>
+  <div class="opcionMes" onclick="toggleMesBim(this,'oct')">Octubre</div>
+  <div class="opcionMes" onclick="toggleMesBim(this,'nov')">Noviembre</div>
+  <div class="opcionMes" onclick="toggleMesBim(this,'dic')">Diciembre</div>
+</div><br>
+
+<div id="inputConsumoBimestre"></div><br>
+
+<button class="btnVerde" onclick="llenarResumenBimestralFlexible()">
+  Siguiente ➡
+</button>
+    <button class="btnRojo" onclick="mostrar('bimestralParte1')">
+  ⬅ Volver
+</button>
+</div>
+</div>
+</div>
+
+
+<!-- reporte bimestral 3  -->
+<div id="bimestralParte3" class="seccion">
+  <div class="loginCardes">
+
+     <div class="loginCardlogos">
+        <div class="header-card">
+        <img src="conuee.png" class="logos">
+        </div>
+    </div>
+    
+  <div class="panelFormulario">
+    <h2>📋 Confirmación bimestral</h2>
+
+    <div id="resumenBimestral"></div><br>
+
+    <button class="btnVerde" onclick="guardarReporteBimestral()">💾 Guardar</button>
+    <button class="btnRojo" onclick="mostrar('bimestralParte2')">⬅ Volver</button>
+  </div>
+</div>
+</div>
+
+<script>
+
+
+function verEdificio(id){
+
+  db.collection("registros")
+    .doc(registroActivo.id)
+    .collection("edificios")
+    .doc(id)
+    .get()
+    .then(doc => {
+
+      if(!doc.exists){
+        alert("No se encontró el edificio");
+        return;
+      }
+
+      const e = doc.data();
+
+      // 🔥 LLENAR EL MODAL
+      document.getElementById("detalleEdificio").innerHTML = `
+        <p><strong>Responsable:</strong> ${e.responsable || "-"}</p>
+        <p><strong>Dependencia:</strong> ${e.dependencia || "-"}</p>
+        <p><strong>Alcance:</strong> ${e.alcance || "-"}</p>
+        <p><strong>Meta:</strong> ${e.meta || "-"}%</p>
+
+        <hr>
+
+        <p><strong>Nombre del edificio:</strong> ${e.nombreEdificio || "-"}</p>
+        <p><strong>Ubicación:</strong> ${e.localizacion || "-"}</p>
+        <p><strong>Superficie:</strong> ${e.superficie || "-"} m²</p>
+        <p><strong>Niveles:</strong> ${e.niveles || "-"}</p>
+        <p><strong>Aire acondicionado:</strong> ${e.aire || "-"}</p>
+        <p><strong>Horas laborales:</strong> ${e.horas || "-"}</p>
+        <p><strong>Días laborales:</strong> ${e.dias || "-"}</p>
+
+        <hr>
+
+        <p><strong>Tarifa:</strong> ${e.tarifa || "-"}</p>
+        <p><strong>Consumo base:</strong> ${e.consumoBase || "-"} kWh</p>
+        <p><strong>Facturación:</strong> $${e.facturacion || "-"}</p>
+        <p><strong>Tipo línea base:</strong> ${e.tipoLineaBase || "-"}</p>
+      `;
+
+      // 🔥 MOSTRAR MODAL
+      document.getElementById("modalVerEdificio")
+        .classList.remove("oculto");
+
+    })
+    .catch(e=>{
+      console.error(e);
+      alert("Error al cargar edificio");
+    });
+}
+
+  function llenarResumenBimestralFlexible(){
+
+  if(mesesSeleccionadosBim.length !== 2){
+    alert("Selecciona 2 meses");
+    return;
+  }
+
+  const consumo = document.getElementById("consumo_bimestre").value;
+
+  if(!consumo){
+    alert("Ingresa el consumo");
+    return;
+  }
+
+  const nombres = {
+    ene:"Enero", feb:"Febrero", mar:"Marzo", abr:"Abril",
+    may:"Mayo", jun:"Junio", jul:"Julio", ago:"Agosto",
+    sep:"Septiembre", oct:"Octubre", nov:"Noviembre", dic:"Diciembre"
+  };
+
+  document.getElementById("resumenBimestral").innerHTML = `
+    <h3>Datos generales</h3>
+    Responsable: ${document.getElementById("b1_responsable").value}<br>
+    Evento previsto: ${document.getElementById("b1_periodo").value}<br>
+
+    <hr>
+
+    <h3>Bimestre</h3>
+    ${nombres[mesesSeleccionadosBim[0]]} - ${nombres[mesesSeleccionadosBim[1]]}
+
+    <hr>
+
+    <h3>Consumo</h3>
+    ${consumo} kWh
+  `;
+
+  mostrar("bimestralParte3");
+}
+function generarInputBimestreFlexible(){
+
+  const cont = document.getElementById("inputConsumoBimestre");
+
+  if(mesesSeleccionadosBim.length === 2){
+
+    const nombres = {
+      ene:"Enero", feb:"Febrero", mar:"Marzo", abr:"Abril",
+      may:"Mayo", jun:"Junio", jul:"Julio", ago:"Agosto",
+      sep:"Septiembre", oct:"Octubre", nov:"Noviembre", dic:"Diciembre"
+    };
+
+    cont.innerHTML = `
+      <div class="grupoCampo">
+        <label>Consumo ${nombres[mesesSeleccionadosBim[0]]} - ${nombres[mesesSeleccionadosBim[1]]}: </label>
+        <input type="number" id="consumo_bimestre">
+      </div>
+    `;
+
+  } else {
+    cont.innerHTML = "";
+  }
+}
+  let mesesSeleccionadosBim = [];
+  function toggleMesBim(el, mes){
+
+  if(mesesSeleccionadosBim.includes(mes)){
+    mesesSeleccionadosBim = mesesSeleccionadosBim.filter(m => m !== mes);
+    el.classList.remove("activo");
+
+  } else {
+
+    if(mesesSeleccionadosBim.length >= 2){
+      alert("Solo puedes seleccionar 2 meses");
+      return;
+    }
+
+    mesesSeleccionadosBim.push(mes);
+    el.classList.add("activo");
+  }
+
+  generarInputBimestreFlexible();
+}
+function llenarResumenBimestral(){
+
+  if(!bimestreSeleccionado){
+    alert("Selecciona un bimestre");
+    return;
+  }
+
+  const consumo = document.getElementById("consumo_bimestre")?.value;
+
+  if(!consumo){
+    alert("Ingresa el consumo");
+    return;
+  }
+
+  const nombres = {
+    ene_feb:"Enero - Febrero",
+    mar_abr:"Marzo - Abril",
+    may_jun:"Mayo - Junio",
+    jul_ago:"Julio - Agosto",
+    sep_oct:"Septiembre - Octubre",
+    nov_dic:"Noviembre - Diciembre"
+  };
+
+  const html = `
+    <h3>Datos generales</h3>
+    Responsable: ${document.getElementById("b1_responsable").value}
+    Evento previsto: ${document.getElementById("b1_periodo").value}
+
+    <hr>
+
+    <h3>Bimestre</h3>
+    ${nombres[bimestreSeleccionado]}<br>
+
+    <hr>
+
+    <h3>Consumo</h3>
+    ${consumo} kWh<br>
+  `;
+
+  document.getElementById("resumenBimestral").innerHTML = html;
+
+  mostrar("bimestralParte3");
+}
+
+function volverABimestral(){
+
+  const salir = confirm("¿Salir? Se perderán los datos");
+
+  if(!salir) return;
+
+  limpiarFormularioBimestral();
+  mostrar("pantallaReportes");
+}
+
+function generarInputBimestre(){
+
+  const contenedor = document.getElementById("inputsBimestre");
+
+  const nombres = {
+    ene_feb:"Enero - Febrero",
+    mar_abr:"Marzo - Abril",
+    may_jun:"Mayo - Junio",
+    jul_ago:"Julio - Agosto",
+    sep_oct:"Septiembre - Octubre",
+    nov_dic:"Noviembre - Diciembre"
+  };
+
+  contenedor.innerHTML = `
+    <div class="grupoCampo">
+      <label>Consumo ${nombres[bimestreSeleccionado]}</label>
+      <input type="number" id="consumo_bimestre" placeholder="kWh">
+    </div>
+  `;
+}
+
+function generarInputsBimestreNuevo(){
+
+  const contenedor = document.getElementById("inputsBimestre");
+  contenedor.innerHTML = "";
+
+  const nombres = {
+    ene:"Enero", feb:"Febrero", mar:"Marzo", abr:"Abril",
+    may:"Mayo", jun:"Junio", jul:"Julio", ago:"Agosto",
+    sep:"Septiembre", oct:"Octubre", nov:"Noviembre", dic:"Diciembre"
+  };
+
+  mesesBimestre.forEach(m => {
+
+    contenedor.innerHTML += `
+      <div class="grupoCampo">
+        <label>Consumo ${nombres[m]}</label>
+        <input type="number" id="consumo_${m}">
+      </div>
+    `;
+  });
+}
+let mesesBimestre = [];
+
+let bimestreSeleccionado = null;
+
+function seleccionarBimestre(el, valor){
+
+  // quitar selección previa
+  document.querySelectorAll(".opcionMes").forEach(e=>{
+    e.classList.remove("activo");
+  });
+
+  // activar el nuevo
+  el.classList.add("activo");
+
+  bimestreSeleccionado = valor;
+
+  generarInputBimestre();
+}
+let datosMeses = {};
+let mesesSeleccionados = [];
+function toggleMes(elemento, mes){
+
+  if(mesesSeleccionados.includes(mes)){
+    mesesSeleccionados = mesesSeleccionados.filter(m => m !== mes);
+    elemento.classList.remove("activo");
+
+  } else {
+
+    if(mesesSeleccionados.length >= 2){
+      alert("Solo puedes seleccionar 2 meses");
+      return;
+    }
+
+    mesesSeleccionados.push(mes);
+    elemento.classList.add("activo");
+  }
+
+  generarInputsMeses();
+}
+
+function generarInputsMeses(){
+
+  const contenedor = document.getElementById("inputsMeses");
+  contenedor.innerHTML = "";
+
+  const nombres = {
+    ene:"Enero:",
+    feb:"Febrero:",
+    mar:"Marzo:",
+    abr:"Abril:",
+    may:"Mayo:",
+    jun:"Junio:",
+     jul:"Julio:",
+    ago:"Agosto:",
+    sep:"Septiembre:",
+    oct:"Octubre:",
+    nov:"Noviembre:",
+    dic:"Diciembre:"
+  };
+
+  mesesSeleccionados.forEach(m => {
+
+    const div = document.createElement("div");
+    div.className = "grupoCampo";
+
+    div.innerHTML = `
+      <label>${nombres[m]}</label>
+      <input type="number" placeholder="Consumo"
+        oninput="datosMeses['${m}']=this.value">
+    `;
+
+    contenedor.appendChild(div);
+  });
+}
+
+
+    function guardarDatoBimestre(mes, valor){
+  datosBimestre[mes] = valor;
+}
+
+    let datosBimestre = {};
+
+function controlarSeleccionMeses(){
+
+  const select = document.getElementById("mesesBimestre");
+  const seleccionados = Array.from(select.selectedOptions);
+
+  // 🚫 SOLO 2 MESES
+  if(seleccionados.length > 2){
+    alert("Solo puedes seleccionar 2 meses");
+    seleccionados[2].selected = false;
+    return;
+  }
+
+  generarInputsMeses(seleccionados);
+}
+
+    function guardarMesYContinuar(){
+
+  const meses = Object.keys(datosMeses);
+
+  if(meses.length !== 2){
+    alert("Debes seleccionar exactamente 2 meses");
+    return;
+  }
+
+  console.log(datosMeses);
+
+  llenarResumenMensual();
+}
+    function guardarDato(mes, valor){
+  datosMeses[mes] = valor;
+}
+function mostrarInputs(meses){
+
+  const contenedor = document.getElementById("inputsMeses");
+  contenedor.innerHTML = "";
+
+  const nombres = {
+    ene: "Enero:",
+    feb: "Febrero:",
+    mar: "Marzo:",
+    abr: "Abril:",
+    may: "Mayo:",
+    jun: "Junio:",
+    jul:"Julio:",
+    ago:"Agosto:",
+    sep:"Septiembre:",
+    oct:"Octubre:",
+    nov:"Noviembre:",
+    dic:"Diciembre:"
+  };
+
+  meses.forEach(m => {
+
+    const div = document.createElement("div");
+    div.className = "grupoCampo";
+
+    div.innerHTML = `
+      <label>${nombres[m.value]}</label>
+      <input type="number" 
+             oninput="guardarDato('${m.value}', this.value)"
+             placeholder="Consumo">
+    `;
+
+    contenedor.appendChild(div);
+  });
+}
+
+
+function validarMeses(){
+
+  const select = document.getElementById("mesesSelect");
+  const seleccionados = Array.from(select.selectedOptions);
+
+  // 🚫 limitar a 2
+  if(seleccionados.length > 2){
+    alert("Solo puedes seleccionar 2 meses");
+    seleccionados[2].selected = false;
+    return;
+  }
+
+  mostrarInputs(seleccionados);
+}
+function guardarReporteBimestral(){
+
+  if(mesesSeleccionadosBim.length !== 2){
+    alert("Selecciona 2 meses");
+    return;
+  }
+
+  const consumo = document.getElementById("consumo_bimestre").value;
+
+  if(!consumo){
+    alert("Ingresa el consumo");
+    return;
+  }
+
+  const data = {
+    responsable: document.getElementById("b1_responsable").value,
+    periodo: document.getElementById("b1_periodo").value,
+    meses: mesesSeleccionadosBim,
+    consumo: consumo,
+    fecha: new Date(),
+    uidUsuario: auth.currentUser.uid
+  };
+
+  db.collection("registros")
+    .doc(registroActivo.id)
+    .collection("edificios")
+    .doc(edificioActivo.id)
+    .collection("reportes")
+    .add(data)
+    .then(() => {
+
+      alert("✅ Reporte bimestral guardado");
+
+      limpiarFormularioBimestral();
+
+      mostrar("pantallaReportes");
+
+      // 🔥 ESTA LÍNEA ES LA CLAVE
+      cargarReportes();
+
+    })
+    .catch(e=>{
+      console.error(e);
+      alert("Error al guardar");
+    });
+}
+function guardarReporteMensual(){
+
+  if(mesesSeleccionados.length !== 2){
+    alert("Selecciona 2 meses");
+    return;
+  }
+
+  if(Object.keys(datosMeses).length !== 2){
+    alert("Faltan datos de consumo");
+    return;
+  }
+
+  const data = {
+    responsable: document.getElementById("m1_responsable").value,
+    evento: document.getElementById("m1_evento").value,
+    meses: mesesSeleccionados,
+    consumo: datosMeses,
+    fecha: new Date(),
+    uidUsuario: auth.currentUser.uid 
+  };
+
+  db.collection("registros")
+    .doc(registroActivo.id)
+    .collection("edificios")
+    .doc(edificioActivo.id)
+    .collection("reportes")
+    .add(data)
+    .then(()=>{
+      alert("✅ Guardado completo");
+
+       limpiarFormularioMensual(); // 👈 AQUI
+
+      document.getElementById("resumenMensual").innerHTML = "";
+
+      mostrar("pantallaReportes");
+    });
+}
+
+function llenarResumenMensual(){
+
+  let consumoHTML = "";
+
+  const nombres = {
+    ene:"Enero:",
+    feb:"Febrero:",
+    mar:"Marzo:",
+    abr:"Abril:",
+    may:"Mayo:",
+    jun:"Junio:",
+    jul:"Julio:",
+    ago:"Agosto:",
+    sep:"Septiembre:",
+    oct:"Octubre:",
+    nov:"Noviembre:",
+    dic:"Diciembre:"
+  };
+
+  mesesSeleccionados.forEach(m=>{
+    consumoHTML += `${nombres[m]}: ${datosMeses[m]}<br>`;
+  });
+
+  const html = `
+    <h3>Datos generales</h3>
+    Responsable: ${m1_responsable.value}<br>
+    Evento previsto: ${m1_evento.value}<br>
+
+    <hr>
+
+    <h3>Consumo</h3>
+    ${consumoHTML}
+  `;
+
+  document.getElementById("resumenMensual").innerHTML = html;
+
+  mostrar("mensualParte3");
+}
+
+function cerrarModalEdificio(){
+  document.getElementById("modalVerEdificio")
+    .classList.add("oculto");
+}
+function actualizarTextoBotones(){
+
+  const botones = document.querySelectorAll(".btnSoloUsuario");
+
+  botones.forEach(btn => {
+
+    if(rolUsuario === "usuario"){
+      btn.innerHTML = "🔒 Cerrar sesión";
+    } else {
+      btn.innerHTML = "⬅ Volver";
+    }
+
+  });
+}
+    function accionBotonRojo(){
+  if(rolUsuario === "usuario"){
+    logoutUsuario();
+  } else {
+    volverRegistros();
+  }
+}
+
+function accionBotonRojos(){
+
+  if(rolUsuario === "usuario"){
+
+    mostrar("seleccionReporte");
+
+  } else {
+
+    volverRegistros();
+
+  }
+}
+
+let estadoEditandoId = null;
+function editarEstado(id){
+
+  const estado = registros.find(r => r.id === id);
+
+  if(!estado){
+    alert("No se encontró el estado");
+    return;
+  }
+
+  const nuevoNombre = prompt("Editar nombre del estado:", estado.estado);
+
+  if(!nuevoNombre) return;
+
+  db.collection("registros")
+    .doc(id)
+    .update({
+      estado: nuevoNombre
+    });
+
+}
+
+
+
+  let accesoExterno = false;
+function preguntarPrograma(id){
+
+  registroPendiente = id;
+
+  document.getElementById("modalPrograma")
+    .classList.remove("oculto");
+}
+
+function cargarReportesExternos(){
+
+  const contenedor = document.getElementById("listaReportesExternos");
+
+  let query = db.collection("reportesExternos");
+
+  // 🔥 FILTRO CLAVE
+  if(registroActivo && registroActivo.id){
+    query = query.where("estadoId", "==", registroActivo.id);
+  }
+
+  query.onSnapshot(snapshot => {
+
+    contenedor.innerHTML = "";
+
+    let datos = [];
+
+    snapshot.forEach(doc => {
+      datos.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+
+    datos.sort((a,b) => {
+      const fa = a.fecha?.seconds ? a.fecha.seconds : new Date(a.fecha).getTime()/1000;
+      const fb = b.fecha?.seconds ? b.fecha.seconds : new Date(b.fecha).getTime()/1000;
+      return fa - fb;
+    });
+
+    datos.forEach((r, index) => {
+
+      const numero = index + 1;
+
+     const fecha = r.fecha
+  ? new Date(
+      r.fecha.seconds
+        ? r.fecha.seconds * 1000
+        : r.fecha
+    ).toLocaleString("es-MX", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true
+    })
+  : "Sin fecha";
+
+      contenedor.innerHTML += `
+        <div class="itemReporteExterno">
+
+          <div class="headerReporte">
+            <div>
+              <div class="nombreReporte">
+                📊 Reporte ${numero}
+              </div>
+
+              <div class="nomReporte">
+                Responsable👤: ${r.nombre || "-"}
+              </div>
+
+              <div class="direccionReporte">
+                Dirección📍: ${r.direccion || "-"}
+              </div>
+
+              <div class="fechaReporte">
+                🕒 ${fecha}
+              </div>
+            </div>
+
+            <button class="btnEliminarExt"
+              onclick="event.stopPropagation(); eliminarReporteExterno('${r.id}')">
+              🗑
+            </button>
+          </div>
+
+          <div class="textoReporte">
+            ${r.reporte || "-"}
+          </div>
+
+        </div>
+      `;
+    });
+
+    if(datos.length === 0){
+      contenedor.innerHTML = "<p>No hay reportes</p>";
+    }
+
+  });
+}
+
+
+function eliminarReporteExterno(id){
+
+  const confirmar = confirm("¿Eliminar este reporte?");
+
+  if(!confirmar) return;
+
+  db.collection("reportesExternos")
+    .doc(id)
+    .delete()
+    .then(()=>{
+      console.log("Eliminado");
+    })
+    .catch(e=>{
+      console.error(e);
+      alert("Error al eliminar");
+    });
+}
+let registroPendiente = null;
+function guardarReporteExterno(){
+
+  const nombre = document.getElementById("nombreExt").value;
+  const direccion = document.getElementById("direccionExt").value;
+  const reporte = document.getElementById("reporteExt").value;
+
+  if(!nombre || !direccion || !reporte){
+    alert("Completa todos los campos");
+    return;
+  }
+
+  db.collection("reportesExternos").add({
+    nombre,
+    direccion,
+    reporte,
+    fecha: new Date(),
+    estadoId: registroActivo.id
+  });
+
+  // 👇 AQUÍ VA
+  const btn = document.querySelector("#reporteExterno .btnVerde");
+  btn.innerText = "Guardar";
+
+  setTimeout(()=>{
+    btn.innerText = "Guardar";
+  }, 1500);
+
+  limpiarReporteExterno();
+}
+function limpiarReporteExterno(){
+  document.getElementById("nombreExt").value = "";
+  document.getElementById("direccionExt").value = "";
+  document.getElementById("reporteExt").value = "";
+
+  // opcional: enfocar el primer campo
+  document.getElementById("nombreExt").focus();
+}
+function volverAReportes(){
+
+  if(
+    document.getElementById("responsableEdificio").value ||
+    document.getElementById("municipioEdificio").value
+  ){
+    const salir = confirm("¿Salir sin guardar? Se perderán los datos");
+    if(!salir) return;
+  }
+
+  edificioTemp = {};
+  limpiarFormularioEdificio();
+  mostrar("pantallaReportes");
+  cargarReportes();
+}
+function cancelarEdificio(){
+
+  if(!registroActivo){
+    alert("No hay registro activo");
+    mostrar("registros");
+    return;
+  }
+
+  edificioTemp = {};
+  edificioActivo = null;
+
+  limpiarFormularioEdificio();
+  limpiarFormularioReporte(); // 👈 opcional
+
+  mostrar("pozos");
+  cargarEdificios();
+}
+  function limpiarFormularioReporte(){
+
+  document.getElementById("reporte1").value = "";
+  document.getElementById("reporte2").value = "";
+  document.getElementById("rep3").value = "";
+
+  document.getElementById("resumenReporte").innerHTML = "";
+}
+let reporteTemp = {};
+
+function repParte2(){
+
+  reporteTemp.parte1 = document.getElementById("reporte1").value;
+
+  if(!reporteTemp.parte1){
+    alert("Completa la parte 1");
+    return;
+  }
+
+  mostrar("reporteParte2");
+}
+
+function repParte3(){
+
+  reporteTemp.parte2 = document.getElementById("reporte2").value;
+
+  if(!reporteTemp.parte2){
+    alert("Completa la parte 2");
+    return;
+  }
+
+  mostrar("reporteParte3");
+}
+
+function repConfirmacion(){
+
+  reporteTemp.parte3 = document.getElementById("rep3").value;
+
+  if(!reporteTemp.parte3){
+    alert("Completa la parte 3");
+    return;
+  }
+
+  document.getElementById("resumenReporte").innerHTML = `
+    <p><strong>Parte 1:</strong> ${reporteTemp.parte1}</p>
+    <p><strong>Parte 2:</strong> ${reporteTemp.parte2}</p>
+    <p><strong>Parte 3:</strong> ${reporteTemp.parte3}</p>
+  `;
+
+  mostrar("reporteConfirmacion");
+}
+function guardarReporteFinal(){
+if(!edificioActivo){
+  alert("No hay edificio seleccionado");
+  return;
+}
+  db.collection("registros")
+  .doc(registroActivo.id)
+  .collection("edificios")
+  .doc(edificioActivo.id)
+  .collection("reportes")
+    .add({
+      ...reporteTemp,
+      uidUsuario: auth.currentUser.uid,
+      fecha: new Date()
+    });
+
+  alert("✅ Reporte guardado");
+
+  reporteTemp = {};
+
+  limpiarFormularioReporte(); // 🔥 AQUI
+
+  mostrar("pantallaReportes");
+  cargarReportes();
+}
+
+function limpiarFormularioBimestral(){
+
+  document.getElementById("b1_responsable").value = "";
+  document.getElementById("b1_periodo").value = "";
+
+  document.querySelectorAll(".opcionMes").forEach(el=>{
+    el.classList.remove("activo");
+  });
+
+  mesesSeleccionadosBim = []; // 🔥 ESTO FALTABA
+
+  document.getElementById("inputConsumoBimestre").innerHTML = "";
+
+  document.getElementById("resumenBimestral").innerHTML = "";
+}
+
+
+
+
+  let modoForzado = false;
+
+
+function cargarReportes(){
+
+  const contenedor = document.getElementById("listaReportes");
+
+  db.collection("registros")
+    .doc(registroActivo.id)
+    .collection("edificios")
+    .doc(edificioActivo.id)
+    .collection("reportes")
+    .onSnapshot(snapshot => {
+
+      contenedor.innerHTML = "";
+
+      let datos = [];
+
+      snapshot.forEach(doc => {
+        datos.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+
+      // 🔥 ORDENAR POR FECHA (más nuevo primero)
+     datos.sort((a,b) => {
+
+  const fa = a.timestamp
+    ? a.timestamp
+    : a.fecha?.seconds
+      ? a.fecha.seconds * 1000
+      : new Date(a.fecha).getTime();
+
+  const fb = b.timestamp
+    ? b.timestamp
+    : b.fecha?.seconds
+      ? b.fecha.seconds * 1000
+      : new Date(b.fecha).getTime();
+
+  return fa - fb; // 🔥 viejo → nuevo (nuevo abajo)
+});
+     if(rolUsuario === "usuario"){
+  const uid = auth.currentUser?.uid;
+
+  datos = datos.filter(r => {
+    return !r.uidUsuario || r.uidUsuario === uid;
+  });
+}
+      datos.forEach((r, index) => {
+        const fecha = r.timestamp
+  ? new Date(r.timestamp)
+  : r.fecha?.seconds
+    ? new Date(r.fecha.seconds * 1000)
+    : r.fecha
+      ? new Date(r.fecha)
+      : null;
+        const numero = index + 1;
+        const id = r.id;
+        let contenido = "";
+
+        const nombres = {
+          ene:"Enero", feb:"Febrero", mar:"Marzo", abr:"Abril",
+          may:"Mayo", jun:"Junio", jul:"Julio", ago:"Agosto",
+          sep:"Septiembre", oct:"Octubre", nov:"Noviembre", dic:"Diciembre"
+        };
+
+        // 🔹 REPORTE NORMAL
+        if(r.parte1 || r.parte2 || r.parte3){
+
+          contenido = `
+            <strong>Parte 1:</strong> ${r.parte1 || "-"} <br>
+            <strong>Parte 2:</strong> ${r.parte2 || "-"} <br>
+            <strong>Parte 3:</strong> ${r.parte3 || "-"} <br>
+          `;
+        }
+
+        // 🔹 MENSUAL
+        else if(r.meses && typeof r.consumo === "object"){
+
+          let consumoHTML = "";
+
+          r.meses.forEach(m => {
+            consumoHTML += `${nombres[m]}: ${r.consumo[m] || "-"}<br>`;
+          });
+
+          contenido = `
+            <strong>Responsable:</strong> ${r.responsable || "-"}<br>
+            <strong>Evento previsto:</strong> ${r.evento || "-"}<br><br>
+
+            <strong>Consumo:</strong><br>
+            ${consumoHTML}
+          `;
+        }
+
+        // 🔹 BIMESTRAL
+        else if(r.meses && (typeof r.consumo === "number" || typeof r.consumo === "string")){
+
+          const orden = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+          r.meses.sort((a,b) => orden.indexOf(a) - orden.indexOf(b));
+
+          const mes1 = nombres[r.meses[0]];
+          const mes2 = nombres[r.meses[1]];
+
+          contenido = `
+            <strong>Responsable:</strong> ${r.responsable || "-"}<br>
+            <strong>Evento previsto:</strong> ${r.periodo || "-"}<br><br>
+
+            <strong>Consumo ${mes1} - ${mes2}:</strong><br>
+            ${r.consumo} kWh
+          `;
+        }
+
+        else{
+          contenido = `<em>Tipo de reporte desconocido</em>`;
+        }
+
+        contenedor.innerHTML += `
+          <div class="cardResultado">
+            
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div class="tituloActividad">📊 Reporte ${numero}</div>
+
+              <button class="btnEliminar" onclick="eliminarReporte('${id}')">
+                🗑
+              </button>
+            </div>
+
+            <div class="detalleResultado">
+              ${contenido}
+              <br><br>
+              🕒 ${
+                  fecha
+                    ? fecha.toLocaleString("es-MX", {
+                        dateStyle: "medium",
+                        timeStyle: "short"
+                      })
+                    : "Sin fecha"
+                }
+
+
+            </div>
+
+          </div>
+        `;
+      });
+
+    });
+}
+
+
+function eliminarReporte(id){
+
+  const confirmar = confirm("¿Eliminar este reporte?");
+
+  if(!confirmar) return;
+
+  db.collection("registros")
+    .doc(registroActivo.id)
+    .collection("edificios")
+    .doc(edificioActivo.id)
+    .collection("reportes")
+    .doc(id)
+    .delete()
+    .then(()=>{
+      console.log("Reporte eliminado");
+    })
+    .catch(e=>{
+      console.error(e);
+      alert("Error al eliminar");
+    });
+}
+function limpiarFormularioMensual(){
+
+  // 🔹 inputs
+  document.getElementById("m1_responsable").value = "";
+  document.getElementById("m1_evento").value = "";
+
+  // 🔹 datos en memoria
+  datosMeses = {};
+  mesesSeleccionados = [];
+
+  // 🔹 quitar selección visual de meses
+  document.querySelectorAll(".opcionMes").forEach(el => {
+    el.classList.remove("activo");
+  });
+
+  // 🔹 limpiar inputs dinámicos
+  document.getElementById("inputsMeses").innerHTML = "";
+
+  // 🔹 limpiar resumen
+  document.getElementById("resumenMensual").innerHTML = "";
+}
+
+function guardarReporte(){
+
+  const texto = document.getElementById("nuevoReporte").value;
+
+  if(!texto){
+    alert("Escribe un reporte");
+    return;
+  }
+
+db.collection("registros")
+  .doc(registroActivo.id)
+  .collection("edificios")
+  .doc(edificioActivo.id)
+  .collection("reportes")
+    .add({
+      texto,
+      fecha: new Date()
+    });
+
+  alert("Reporte guardado");
+  document.getElementById("nuevoReporte").value = "";
+}
+  let edificioActivo = null;
+
+function abrirEdificio(id){
+
+db.collection("registros")
+  .doc(registroActivo.id)
+  .collection("edificios")
+  .doc(id)
+  .get()
+  .then(doc => {
+
+      if(!doc.exists){
+        alert("No se encontró el edificio");
+        return;
+      }
+
+      edificioActivo = {
+        id: doc.id,
+        ...doc.data()
+      };
+
+      // ✅ AHORA sí ya existe
+      document.getElementById("verResponsable").innerText = edificioActivo.responsable || "Sin dato";
+
+      console.log("Edificio seleccionado:", edificioActivo);
+
+    mostrar("pantallaReportes");
+cargarReportes();
+cargarReportesExternos();
+
+    });
+}
+function irAgregarReporte(){
+
+  if(!edificioActivo){
+    alert("Selecciona un edificio primero");
+    return;
+  }
+
+  if(edificioActivo.tipoLineaBase === "Mensual"){
+    mostrar("mensualParte1");
+  } else {
+    mostrar("bimestralParte1");
+  }
+}
+function cargarEdificios(){
+
+
+    
+  const lista = document.getElementById("listaPersonas");
+  lista.innerHTML = "";
+
+  db.collection("registros")
+    .doc(registroActivo.id)
+    .collection("edificios")
+    .onSnapshot(snapshot => {
+
+      lista.innerHTML = "";
+
+      snapshot.forEach(doc => {
+
+        const e = doc.data();
+        const id = doc.id;
+
+ if(rolUsuario === "usuario"){
+  if(e.uidUsuario && e.uidUsuario !== auth.currentUser.uid) return;
+}
+
+        const li = document.createElement("li"); // 🔥 FALTABA ESTO
+        li.className = "itemPersona";
+
+        let tipoReporte = "---";
+
+        db.collection("registros")
+          .doc(registroActivo.id)
+          .collection("edificios")
+          .doc(id)
+          .collection("reportes")
+          .get()
+          .then(repSnap => {
+
+            if(!repSnap.empty){
+
+              let tieneMensual = false;
+              let tieneBimestral = false;
+
+              repSnap.forEach(rdoc => {
+                const r = rdoc.data();
+
+                if(r.meses && typeof r.consumo === "object"){
+                  tieneMensual = true;
+                }
+
+                if(r.meses && (typeof r.consumo === "number" || typeof r.consumo === "string")){
+                  tieneBimestral = true;
+                }
+              });
+
+              if(tieneMensual && tieneBimestral){
+                tipoReporte = "Mensual y Bimestral";
+              } else if(tieneMensual){
+                tipoReporte = "Mensual";
+              } else if(tieneBimestral){
+                tipoReporte = "Bimestral";
+              }
+            }
+li.innerHTML = `
+  <div onclick="abrirEdificio('${id}')" 
+       style="display:flex; width:100%; justify-content:space-between; align-items:center; cursor:pointer;">
+
+    <!-- IZQUIERDA -->
+    <div class="infoPersona">
+      <strong>🏢 ${e.nombreEdificio}</strong><br>
+                  Responsable: ${e.responsable}<br>
+                
+    </div>
+
+    <!-- DERECHA -->
+    <div style="display:flex; align-items:center; gap:15px;">
+
+      <span class="badgeTipo">
+        📊 ${tipoReporte}
+      </span>
+
+      ${
+        rolUsuario === "admin"
+        ? `<button onclick="event.stopPropagation(); verEdificio('${id}')">👁</button>`
+        : ``
+      }
+
+    </div>
+
+  </div>
+`;
+
+          });
+
+        lista.appendChild(li); // 🔥 esto sí va fuera del .then
+
+      });
+
+      if(lista.innerHTML === ""){
+        lista.innerHTML = "<p style='text-align:center;'>No hay edificios registrados</p>";
+      }
+
+    });
+}
+function limpiarFormularioEdificio(){
+
+  document.getElementById("responsableEdificio").value = "";
+  document.getElementById("tipoEdificio").value = "";
+  document.getElementById("dependenciaEdificio").value = "";
+  document.getElementById("metaEdificio").value = "";
+
+  document.getElementById("nombreedificio").value = "";
+  document.getElementById("localedificio").value = "";
+  document.getElementById("superficiem2").value = "";
+  document.getElementById("numniveles").value = "";
+  document.getElementById("tipoEnergia").value = "";
+  document.getElementById("hrslaboral").value = "";
+  document.getElementById("diaslaboral").value = "";
+
+  document.getElementById("tarifelectric").value = "";
+  document.getElementById("consumlineabase").value = "";
+  document.getElementById("factlineabse").value = "";
+
+  document.getElementById("lineabase").value = "";
+
+  document.getElementById("resumenEdificio").innerHTML = "";
+}
+let edificioTemp = {};
+function irFormularioEdificio(){
+  edificioTemp = {}; // 🔥 LIMPIAR DATOS
+  limpiarFormularioEdificio(); // 👈 también inputs
+  mostrar("formEdificio");
+}
+  let rolUsuario = null;
+
+
+  let indexActividadEditando = null;
+  let indexEditando = null;
+    let unsubscribeDoc = null;
+const firebaseConfig = {
+   apiKey: "AIzaSyAb3rnhodmWeo8xXBXfzuDD1AX8KI2wPxk",
+  authDomain: "sistema-estados-formularios.firebaseapp.com",
+  databaseURL: "https://sistema-estados-formularios-default-rtdb.firebaseio.com",
+  projectId: "sistema-estados-formularios",
+  storageBucket: "sistema-estados-formularios.firebasestorage.app",
+  messagingSenderId: "1060760804878",
+  appId: "1:1060760804878:web:62b53deef1a45d6757665f",
+  measurementId: "G-9G772HG0JJ"
+};
+
+const app = firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+let registros = [];
+
+function generarColor(i){
+  const hue = (i * 137) % 360;
+  return `FF${hslToHex(hue, 70, 90).replace("#","")}`;
+}
+
+function hslToHex(h, s, l){
+  s /= 100;
+  l /= 100;
+
+  let c = (1 - Math.abs(2*l - 1)) * s;
+  let x = c * (1 - Math.abs((h/60) % 2 - 1));
+  let m = l - c/2;
+  let r=0, g=0, b=0;
+
+  if(h<60){r=c; g=x; b=0;}
+  else if(h<120){r=x; g=c; b=0;}
+  else if(h<180){r=0; g=c; b=x;}
+  else if(h<240){r=0; g=x; b=c;}
+  else if(h<300){r=x; g=0; b=c;}
+  else{r=c; g=0; b=x;}
+
+  r = Math.round((r+m)*255);
+  g = Math.round((g+m)*255);
+  b = Math.round((b+m)*255);
+
+  return "#" + [r,g,b].map(x => x.toString(16).padStart(2,"0")).join("");
+}
+let personaActiva = null;
+
+let registroActivo = null;
+
+// ================= GUARDAR MES =================
+function guardarRegistro(){
+
+  const estadoInput = document.getElementById("MES").value.trim();
+  const fecha = document.getElementById("fecha").value;
+
+  if(!estadoInput || !fecha){
+    alert("Completa estado y fecha");
+    return;
+  }
+
+  // 🔥 LIMPIAR TEXTO
+  let limpio = estadoInput.toLowerCase().replace(/[^a-z]/g, "");
+
+  // 🔥 EVITAR NOMBRE VACÍO O CORTO
+  if(limpio.length < 3){
+    limpio = "estado" + Date.now();
+  }
+
+  // 🔥 HACER EMAIL ÚNICO SIEMPRE
+  let email = limpio + "@estado.com";
+
+  const existe = registros.some(r => r.email === email);
+
+  if(existe){
+    email = limpio + Date.now() + "@estado.com";
+  }
+
+  const password = generarPassword();
+
+  console.log("Creando usuario:", email);
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(userCredential => {
+
+      const uid = userCredential.user.uid;
+
+      return db.collection("registros").add({
+        estado: estadoInput,
+        fecha: fecha,
+        uid: uid,
+        email: email,
+        password: password,
+        personas: [],
+        permisos: {
+          editar: true,
+          eliminar: true
+        }
+      });
+
+    })
+    .then(()=>{
+
+      mostrarModalUsuario(email, password);
+
+      return auth.signOut(); // 🔥 IMPORTANTE
+
+    })
+    .then(()=>{
+
+     
+
+      escucharRegistros();
+
+      document.getElementById("MES").value = "";
+      document.getElementById("fecha").value = "";
+
+    })
+    .catch(e => {
+
+      console.error(e);
+
+      if(e.code === "auth/email-already-in-use"){
+        alert("El correo ya existe (reintenta)");
+      }
+      else if(e.code === "auth/invalid-email"){
+        alert("Error: email inválido generado");
+      }
+      else if(e.code === "auth/weak-password"){
+        alert("Contraseña débil");
+      }
+      else if(e.code === "auth/too-many-requests"){
+        alert("Demasiados intentos. Espera unos segundos");
+      }
+      else{
+        alert(e.message);
+      }
+
+    });
+}
+// ================= MOSTRAR MESES =================
+function actualizarRegistros(){
+  
+  const lista = document.getElementById("listaRegistros");
+lista.innerHTML = "";
+registros.sort((a, b) => 
+  (a.estado || "").localeCompare(b.estado || "")
+);
+  registros.forEach((r,i)=>{
+
+    lista.innerHTML += `
+    <li class="itemMes" onclick="seleccionarRegistro('${r.id}')">
+
+      <div class="nombreMes">
+        <span class="iconoMes">📁</span>${r.estado}
+      </div>
+
+${rolUsuario === "admin" ? `
+<div class="accionesPersona">
+  <button onclick="event.stopPropagation(); verCredencialesEstado('${r.id}')">👁</button>
+  <button onclick="event.stopPropagation(); abrirEditarEstado('${r.id}')">✏️</button>
+  <button onclick="eliminarRegistro('${r.id}', event)">🗑</button>
+</div>
+` : ``}
+
+    </li>
+    `;
+    
+  });
+}
+function verCredencialesEstado(id){
+
+  const estado = registros.find(r => r.id === id);
+
+  document.getElementById("nuevoEmail").innerText = estado.email || "Sin email";
+ document.getElementById("nuevoPassword").innerText = estado.password || "No disponible";
+
+  document.getElementById("modalUsuarioCreado")
+    .classList.remove("oculto");
+}
+
+
+
+let preguntaMostrada = false;
+
+function escucharRegistros(){
+
+  let query = db.collection("registros");
+
+if(rolUsuario === "usuario" && auth.currentUser){
+  query = db.collection("registros")
+    .where("uid", "==", auth.currentUser.uid);
+}
+
+query
+
+  .onSnapshot(snapshot => {
+
+      registros = [];
+
+      snapshot.forEach(doc => {
+        registros.push({
+          id: doc.id,
+          ...doc.data()
+        });
+    
+      });
+
+      actualizarRegistros();
+
+      // 🔥 resto igual...
+      
+if(rolUsuario === "usuario" && auth.currentUser){
+
+  const user = auth.currentUser;
+
+  const registroUsuario = registros.find(r => r.uid === user.uid);
+
+  if(registroUsuario){
+
+    registroPendiente = registroUsuario.id;
+
+    // 🔥 ENTRAR AUTOMÁTICO SIN PREGUNTA
+   registroActivo = registroUsuario;
+
+  } else {
+    console.warn("Usuario sin estado asignado");
+  }
+
+}
+    });
+}
+
+
+
+
+function logoutUsuario(){
+
+  auth.signOut().then(()=>{
+
+    rolUsuario = null;
+    personaActiva = null;
+    registroActivo = null;
+
+    document.getElementById("correoUsuario").value = "";
+    document.getElementById("passwordUsuario").value = "";
+
+    mostrar("inicio");
+
+  });
+}
+function eliminarRegistro(id, e){
+
+  if(e) e.stopPropagation(); // 🔥 esto evita que abra el mes
+
+  if(confirm("¿Eliminar este estado?")){
+    db.collection("registros").doc(id).delete();
+  }
+}
+function responderPrograma(pertenece){
+
+  document.getElementById("modalPrograma")
+    .classList.add("oculto");
+
+  if(!pertenece){
+
+    accesoExterno = true;
+
+    registroActivo = { id: registroPendiente };
+
+    mostrar("reporteExterno");
+    cargarReportesExternos();
+
+    return;
+  }
+
+  accesoExterno = false;
+
+  // 👉 ENTRA A EDIFICIOS
+  entrarRegistro(registroPendiente);
+}
+
+function verReportesAdmin(tipo){
+
+  if(!registroActivo){
+    alert("Selecciona un estado primero");
+    return;
+  }
+
+  tipoReporteSeleccionado = tipo;
+
+  mostrar("reporteGeneral");
+  cargarReportesGenerales();
+}
+
+function seleccionarRegistro(id){
+
+  registroActivo = registros.find(r => r.id === id);
+
+  if(!id){
+    alert("Error: id vacío");
+    return;
+  }
+
+  if(rolUsuario === "admin"){
+
+    // 🔥 IR A PANTALLA (no modal)
+    mostrar("pantallaCategorias");
+
+    // 🔥 MOSTRAR NOMBRE DEL ESTADO ARRIBA
+    document.getElementById("tituloCategorias").innerText =
+      "📋 Reportes de: " + (registroActivo.estado || "");
+
+  } else {
+    mostrar("seleccionReporte");
+  }
+}
+// ================= SELECCIONAR Estado =================
+function entrarRegistro(id){
+
+  console.log("CLICK en registro:", id);
+
+  if(unsubscribeDoc){
+    unsubscribeDoc();
+  }
+
+  unsubscribeDoc = db.collection("registros")
+    .doc(id)
+    .onSnapshot(doc => {
+
+      registroActivo = {
+        id: doc.id,
+        ...doc.data()
+      };
+
+      document.getElementById("tituloMes").innerText =
+        "ESTADO: " + registroActivo.estado;
+
+      actualizarPersonas();
+
+      if(registroActivo.personas){
+        try{ llenarSelects(); }catch(e){}
+      }
+
+      aplicarPermisos();
+
+      personaActiva = null;
+      mostrar("pozos");
+      cargarEdificios();
+
+      if(personaActiva !== null){
+        mostrarActividades();
+      }
+
+      if(!registroActivo.permisos){
+        registroActivo.permisos = {
+          editar: true,
+          eliminar: true
+        };
+      }
+
+    });
+}
+
+// ================= POZOS =================
+function generarPassword(){
+
+  const mayus = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const minus = "abcdefghijklmnopqrstuvwxyz";
+  const numeros = "0123456789";
+  const simbolos = "@#$%&*";
+
+  const todo = mayus + minus + numeros + simbolos;
+
+  let password = "";
+
+  // 🔥 aseguramos mínimo de cada tipo
+  password += mayus[Math.floor(Math.random() * mayus.length)];
+  password += minus[Math.floor(Math.random() * minus.length)];
+  password += numeros[Math.floor(Math.random() * numeros.length)];
+  password += simbolos[Math.floor(Math.random() * simbolos.length)];
+
+  // 🔥 completar hasta 10 caracteres
+  for(let i = 4; i < 10; i++){
+    password += todo[Math.floor(Math.random() * todo.length)];
+  }
+
+  // 🔀 mezclar (shuffle)
+  password = password.split('').sort(() => 0.5 - Math.random()).join('');
+
+  return password;
+}
+function guardarParte1(){
+
+  edificioTemp = {
+    responsable: document.getElementById("responsableEdificio").value,
+    alcance: document.getElementById("tipoEdificio").value,
+    dependencia: document.getElementById("dependenciaEdificio").value,
+    meta: document.getElementById("metaEdificio").value
+  };
+
+  if(!edificioTemp.responsable){
+    alert("Completa los campos");
+    return;
+  }
+
+  mostrar("formEdificioParte2");
+}
+function guardarParte2(){
+
+  edificioTemp.nombreEdificio = document.getElementById("nombreedificio").value;
+  edificioTemp.localizacion = document.getElementById("localedificio").value;
+  edificioTemp.superficie = document.getElementById("superficiem2").value;
+  edificioTemp.niveles = document.getElementById("numniveles").value;
+  edificioTemp.aire = document.getElementById("tipoEnergia").value;
+  edificioTemp.horas = document.getElementById("hrslaboral").value;
+  edificioTemp.dias = document.getElementById("diaslaboral").value;
+
+  if(!edificioTemp.nombreEdificio){
+    alert("Completa el nombre del edificio");
+    return;
+  }
+
+  mostrar("formEdificioParte3");
+}
+function guardarParte3(){
+
+  edificioTemp.tarifa = document.getElementById("tarifelectric").value;
+  edificioTemp.consumoBase = document.getElementById("consumlineabase").value;
+  edificioTemp.facturacion = document.getElementById("factlineabse").value;
+
+  if(!edificioTemp.tarifa){
+    alert("Completa la tarifa eléctrica");
+    return;
+  }
+
+  mostrar("formEdificioParte4");
+}
+function guardarParte4(){
+
+  edificioTemp.tipoLineaBase = document.getElementById("lineabase").value;
+
+  mostrarResumen();
+  mostrar("formEdificioParteC");
+}
+function mostrarResumen(){
+
+  const div = document.getElementById("resumenEdificio");
+
+  div.innerHTML = `
+    <p><strong>Responsable:</strong> ${edificioTemp.responsable}</p>
+    <p><strong>Alcance:</strong> ${edificioTemp.alcance}</p>
+    <p><strong>Dependencia:</strong> ${edificioTemp.dependencia}</p>
+    <p><strong>Meta:</strong> ${edificioTemp.meta}%</p>
+
+    <hr>
+
+    <p><strong>Edificio:</strong> ${edificioTemp.nombreEdificio}</p>
+    <p><strong>Ubicación:</strong> ${edificioTemp.localizacion}</p>
+    <p><strong>Superficie:</strong> ${edificioTemp.superficie} m²</p>
+    <p><strong>Niveles:</strong> ${edificioTemp.niveles}</p>
+    <p><strong>Aire acondicionado:</strong> ${edificioTemp.aire}</p>
+    <p><strong>Horas laborales:</strong> ${edificioTemp.horas}</p>
+    <p><strong>Días laborales:</strong> ${edificioTemp.dias}</p>
+
+    <hr>
+
+    <p><strong>Tarifa:</strong> ${edificioTemp.tarifa}</p>
+    <p><strong>Consumo base:</strong> ${edificioTemp.consumoBase} kWh</p>
+    <p><strong>Facturación:</strong> $${edificioTemp.facturacion}</p>
+    <p><strong>Tipo línea base:</strong> ${edificioTemp.tipoLineaBase}</p>
+  `;
+}
+function guardarTodoEdificio(){
+
+  const obs = "";
+ db.collection("registros")
+  .doc(registroActivo.id)
+  .collection("edificios")
+  .add({
+    ...edificioTemp,
+    uidUsuario: auth.currentUser.uid,
+    observaciones: obs,
+    fecha: new Date()
+  });
+
+  alert("✅ Edificio guardado completo");
+
+  edificioTemp = {};
+  mostrar("pozos");
+  limpiarFormularioEdificio(); // 🔥 MUY IMPORTANTE
+}
+function guardarPersona(){
+
+  const nombre = document.getElementById("nombrePersona").value;
+  const puesto = document.getElementById("puestoPersona").value;
+
+  if(!nombre || !puesto){
+    alert("Completa nombre y puesto");
+    return;
+  }
+
+  const email = nombre.replaceAll(" ","").toLowerCase() + "@usuariosayer.com";
+  const password = generarPassword();
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(userCredential => {
+
+      const uid = userCredential.user.uid;
+      const existe = registroActivo.personas.some(p => p.uid === uid);
+
+if(existe){
+  alert("Esta persona ya existe");
+  return;
+}
+      console.log("UID CREADO:", uid); // 🔥 DEBUG
+
+     registroActivo.personas.push({
+  nombre,
+  puesto,
+  uid,
+  email,
+  password, // 🔥 agregar esto
+  actividades:[]
+        });
+      return db.collection("registros")
+        .doc(registroActivo.id)
+       .update({
+  personas: JSON.parse(JSON.stringify(registroActivo.personas))
+})
+.then(() => {
+  mostrarModalUsuario(email, password);
+
+  return auth.signOut(); // 👈 AGREGA ESTO
+})
+.then(() => {
+
+  document.getElementById("nombrePersona").value = "";
+  document.getElementById("puestoPersona").value = "";
+
+  document.getElementById("nombrePersona").focus();
+});
+
+    })
+    .catch(e => {
+      console.error(e);
+      alert(e.message);
+    });
+}
+
+// ================= MOSTRAR POZOS =================
+function actualizarPersonas(){
+const btnAnalisis = document.getElementById("btnAnalisis");
+  const lista = document.getElementById("listaPersonas");
+  lista.innerHTML = "";
+
+
+
+lista.innerHTML = "";
+
+const fragment = document.createDocumentFragment();
+
+registroActivo.personas.forEach((p,i)=>{
+
+  if(rolUsuario === "usuario"){
+    const user = auth.currentUser;
+    if(!user || p.uid !== user.uid) return;
+  }
+
+  const li = document.createElement("li");
+  li.className = "itemPersona";
+
+  li.innerHTML = `
+    <div onclick="abrirPersona(${i})" style="cursor:pointer;">
+      <div class="infoPersona">
+        <span class="iconoPersona">👤</span> ${p.nombre}
+        <br><br>
+        <small style="color:#777;">${p.puesto}</small>
+      </div>
+    </div>
+
+    <div class="accionesPersona">
+      <button onclick="event.stopPropagation(); verCredenciales(${i})">👁</button>
+      <button onclick="event.stopPropagation(); abrirEditar(${i})">✏️</button>
+      <button onclick="event.stopPropagation(); eliminarPersona(${i})">🗑</button>
+    </div>
+  `;
+
+  fragment.appendChild(li);
+});
+
+lista.appendChild(fragment);
+}
+function verCredenciales(i){
+
+  const persona = registroActivo.personas[i];
+
+  document.getElementById("nuevoEmail").innerText = persona.email;
+  document.getElementById("nuevoPassword").innerText = persona.password || "No disponible";
+
+  document.getElementById("modalUsuarioCreado")
+    .classList.remove("oculto");
+
+}
+function abrirEditar(i){
+
+  indexEditando = i;
+
+  const persona = registroActivo.personas[i];
+
+  document.getElementById("editNombre").value = persona.nombre;
+  document.getElementById("editPuesto").value = persona.puesto;
+
+  document.getElementById("modalEditar").classList.remove("oculto");
+}
+// ================= ELIMINAR =================
+function eliminarPersona(i){
+
+  if(!confirm("¿Eliminar esta persona?")) return;
+
+  registroActivo.personas.splice(i,1);
+
+  db.collection("registros")
+  .doc(registroActivo.id)
+  .update({
+  personas: JSON.parse(JSON.stringify(registroActivo.personas))
+});
+  actualizarPersonas();
+}
+function editarPersona(i){
+
+  const persona = registroActivo.personas[i];
+
+  const lista = document.getElementById("listaPersonas");
+
+  lista.children[i].innerHTML = `
+    
+    <input id="editNombre_${i}" value="${persona.nombre}">
+    <input id="editPuesto_${i}" value="${persona.puesto}">
+
+    <button onclick="guardarEdicion(${i})">💾 Guardar</button>
+  `;
+}
+function guardarEdicion(){
+
+  const nombre = document.getElementById("editNombre").value;
+
+  // 🔥 SI ESTÁS EDITANDO ESTADO
+  if(estadoEditandoId){
+
+    db.collection("registros")
+      .doc(estadoEditandoId)
+      .update({
+        estado: nombre
+      });
+
+    estadoEditandoId = null;
+
+    // volver a mostrar campo puesto para personas
+    document.getElementById("editPuesto").style.display = "block";
+
+    cerrarModal();
+    return;
+  }
+
+  // 🔽 SI ES PERSONA (tu código original)
+  const puesto = document.getElementById("editPuesto").value;
+
+  registroActivo.personas[indexEditando].nombre = nombre;
+  registroActivo.personas[indexEditando].puesto = puesto;
+
+  db.collection("registros")
+    .doc(registroActivo.id)
+    .update({
+      personas: JSON.parse(JSON.stringify(registroActivo.personas))
+    });
+
+  cerrarModal();
+}
+
+function cerrarModal(){
+  document.getElementById("modalEditar").classList.add("oculto");
+}
+function eliminarActividad(i){
+
+     const confirmar = confirm(
+  "🗑 Eliminar actividad\n\n" +
+  "Esta acción eliminará la actividad permanentemente.\n\n" +
+  "¿Deseas continuar?"
+);
+
+  if(!confirmar) return;
+
+   if(rolUsuario === "usuario" && !registroActivo.personas[personaActiva].actividades[i].permisos?.eliminar){
+  alert("Eliminación bloqueada por administrador");
+  return;
+}
+
+ registroActivo.personas[personaActiva].actividades.splice(i,1);
+
+  db.collection("registros")
+  .doc(registroActivo.id)
+  .update({
+  personas: JSON.parse(JSON.stringify(registroActivo.personas))
+});
+  mostrarActividades();
+}
+
+function limpiarUI(){
+  document.getElementById("listaActividades").innerHTML = "";
+  document.getElementById("resultadoComparacion").innerHTML = "";
+}
+// ================= GUARDADO =================
+
+// ================= NAVEGACIÓN =================
+function mostrar(id){
+
+  console.log("Ir a:", id);
+
+  const seccion = document.getElementById(id);
+
+  if(!seccion){
+    console.error("NO EXISTE:", id);
+    return;
+  }
+
+  document.querySelectorAll(".seccion")
+    .forEach(s=>s.classList.remove("activo"));
+
+  seccion.classList.add("activo");
+}
+function volverAReportesDesdeMensual(){
+
+  const salir = confirm("¿Salir? Se perderán los datos del formulario");
+
+  if(!salir) return;
+
+  limpiarFormularioMensual(); // 👈 la que ya hicimos
+
+  mostrar("pantallaReportes");
+}
+function volverRegistros(){
+
+  if(unsubscribeDoc){
+    unsubscribeDoc();
+    unsubscribeDoc = null;
+  }
+
+  modoForzado = true;
+
+  personaActiva = null;
+  registroActivo = null;
+
+  const tabla = document.getElementById("listaActividades");
+  if(tabla) tabla.innerHTML = "";
+
+  const comp = document.getElementById("resultadoComparacion");
+  if(comp) comp.innerHTML = "";
+
+  mostrar("registros");
+}
+function abrirPersona(i){
+
+    document.getElementById("listaActividades").innerHTML = "";
+
+  if(rolUsuario === "usuario"){
+    const user = auth.currentUser;
+    if(registroActivo.personas[i].uid !== user.uid){
+      alert("No tienes acceso");
+      return;
+    }
+  }
+
+  personaActiva = i;
+
+  const persona = registroActivo.personas[i];
+
+  document.getElementById("tituloPersona").innerText =
+    "Persona: " + persona.nombre;
+
+  actualizarBotones();
+
+  mostrarActividades();
+  mostrar("detallePersona");
+}
+
+
+
+
+
+function registro(){
+  const email = document.getElementById("correo").value;
+const pass = document.getElementById("password").value;
+
+  auth.createUserWithEmailAndPassword(email, pass)
+    .then(()=>{
+      alert("Cuenta creada");
+    })
+    .catch(e => alert(e.message));
+}
+
+function login(){
+  const email = document.getElementById("correo").value;
+const pass = document.getElementById("password").value;
+
+  auth.signInWithEmailAndPassword(email, pass)
+    .then(()=>{
+      console.log("Login correcto");
+    })
+    .catch(e => {
+      console.error(e);
+      
+      if(e.code === "auth/user-not-found"){
+        alert("Usuario no existe");
+      } else if(e.code === "auth/wrong-password"){
+        alert("Contraseña incorrecta");
+      } else if(e.code === "auth/invalid-email"){
+        alert("Correo inválido");
+      } else {
+        alert(e.message);
+      }
+    });
+}
+
+function logout(){
+auth.signOut().then(()=>{
+
+    rolUsuario = null;
+
+    mostrar("inicio");
+
+  });
+
+
+      // 🔥 LIMPIAR INPUTS
+      document.getElementById("correo").value = "";
+      document.getElementById("password").value = "";
+      document.getElementById("correoUsuario").value = "";
+      document.getElementById("passwordUsuario").value = "";
+
+   
+}
+
+function togglePassword(){
+  const input = document.getElementById("password");
+
+  if(input.type === "password"){
+    input.type = "text";
+  } else {
+    input.type = "password";
+  }
+}
+window.onclick = function(e){
+
+  const modalPersona = document.getElementById("modalEditar");
+  const modalActividad = document.getElementById("modalActividad");
+
+  if(e.target === modalPersona){
+    cerrarModal();
+  }
+
+  if(e.target === modalActividad){
+    cerrarModalActividad();
+  }
+}
+
+function irAdmin(){
+  mostrar("loginAdmin");
+}
+
+function irUsuario(){
+
+  document.getElementById("correoUsuario").value = "";
+  document.getElementById("passwordUsuario").value = "";
+
+  mostrar("loginUsuario");
+}
+function loginAdmin(){
+
+  const email = document.getElementById("correo").value;
+  const pass = document.getElementById("password").value;
+
+  auth.signInWithEmailAndPassword(email, pass)
+    .then((userCredential)=>{
+
+      rolUsuario = "admin";
+actualizarTextoBotones();
+
+      const user = userCredential.user;
+      const uid = user.uid;
+
+      db.collection("usuarios").doc(uid).get()
+        .then(doc => {
+
+          if(doc.exists){
+            const data = doc.data();
+            const nombre = data.nombre || "Administrador";
+
+            document.getElementById("bienvenidaAdmin").innerText =
+              "Bienvenido Ing. " + nombre;
+          } else {
+            document.getElementById("bienvenidaAdmin").innerText =
+              "👋 Bienvenido, Administrador";
+          }
+
+        });
+
+      escucharRegistros();
+      mostrar("registros");
+      aplicarPermisos();
+
+    })
+    .catch(e => alert(e.message));
+}
+
+
+function loginUsuario(){
+  registroActivo = null;
+personaActiva = null;
+
+if(unsubscribeDoc){
+  unsubscribeDoc();
+  unsubscribeDoc = null;
+}
+
+  const email = document.getElementById("correoUsuario").value;
+  const pass = document.getElementById("passwordUsuario").value;
+
+  if(!email || !pass){
+    alert("Ingresa correo y contraseña");
+    return;
+  }
+
+  auth.signInWithEmailAndPassword(email, pass)
+    .then(()=>{
+
+      rolUsuario = "usuario";
+      preguntaMostrada = false;
+
+      console.log("LOGIN OK:", email); // debug
+
+
+      actualizarTextoBotones(); // 🔥 AQUI
+      escucharRegistros(); // 🔥 ESTA LÍNEA FALTABA
+      
+      aplicarPermisos();
+      mostrar("seleccionReporte");
+
+    })
+    .catch(e => {
+      console.error(e);
+
+      if(e.code === "auth/user-not-found"){
+        alert("Usuario no existe");
+      } else if(e.code === "auth/wrong-password"){
+        alert("Contraseña incorrecta");
+      } else {
+        alert(e.message);
+      }
+    });
+}
+
+let tipoReporteSeleccionado = "";
+
+function abrirReporte(tipo){
+
+  tipoReporteSeleccionado = tipo;
+
+  console.log("TIPO:", tipoReporteSeleccionado);
+
+  document.getElementById("tituloReporteGeneral")
+    .innerHTML = "📋 Reporte de " + tipo;
+
+  mostrar("reporteGeneral");
+
+  cargarReportesGenerales();
+}
+
+function guardarReporteSimple(){
+
+  console.log("GUARDANDO:", tipoReporteSeleccionado);
+
+const data = {
+  tipo: tipoReporteSeleccionado,
+
+  estadoId: registroActivo.id, // 🔥 ESTA ES LA CLAVE
+
+  categoria: document.getElementById("categoriaReporte").value,
+  nombre: document.getElementById("nombreReporte").value,
+  responsable: document.getElementById("responsableReporte").value,
+ fecha: new Date(),
+  dependencia: document.getElementById("dependenciaReporte").value,
+  reporte: document.getElementById("textoReporteGeneral").value,
+
+  timestamp: Date.now()
+};
+
+  db.collection("reportesGenerales")
+    .add(data)
+
+    .then(()=>{
+
+      alert("✅ Reporte guardado");
+
+      // LIMPIAR
+      document.getElementById("categoriaReporte").value = "";
+      document.getElementById("nombreReporte").value = "";
+      document.getElementById("responsableReporte").value = "";
+      document.getElementById("fechaReporteGeneral").value = "";
+      document.getElementById("dependenciaReporte").value = "";
+      document.getElementById("textoReporteGeneral").value = "";
+
+      cargarReportesGenerales();
+
+    })
+
+    .catch(err=>{
+
+      console.error(err);
+
+      alert("Error al guardar");
+    });
+}
+function verEdificiosAdmin(){
+
+mostrar("listaRegistros") // o la pantalla a la que quieras regresar
+
+  preguntarPrograma(registroActivo.id);
+
+}
+function volverSegunRol(){
+
+  if(rolUsuario === "admin"){
+    mostrar("pantallaCategorias"); // ✅ REGRESA AL MENÚ CORRECTO
+  } else {
+    mostrar("seleccionReporte");
+  }
+
+}
+
+function cargarReportesGenerales(){
+
+  const contenedor = document.getElementById("contenedorReportesGenerales");
+
+  let query = db.collection("reportesGenerales")
+    .where("tipo", "==", tipoReporteSeleccionado)
+    .where("estadoId", "==", registroActivo.id);
+
+  query.get()
+    .then(snapshot => {
+
+      contenedor.innerHTML = "";
+
+      if(snapshot.empty){
+        contenedor.innerHTML = `
+          <div class="sinResultados">
+            No hay reportes
+          </div>
+        `;
+        return;
+      }
+
+      let datos = [];
+
+      snapshot.forEach(doc => {
+        datos.push(doc.data());
+      });
+
+      // 🔥 ORDEN SEGURO POR FECHA
+      datos.sort((a,b) => {
+
+        const fa = a.timestamp
+          ? a.timestamp
+          : a.fecha?.seconds
+            ? a.fecha.seconds * 1000
+            : new Date(a.fecha).getTime();
+
+        const fb = b.timestamp
+          ? b.timestamp
+          : b.fecha?.seconds
+            ? b.fecha.seconds * 1000
+            : new Date(b.fecha).getTime();
+
+        return fa - fb; // 🔥 viejo → nuevo (nuevo abajo)
+      });
+
+      datos.forEach((r, index) => {
+
+        const numero = index + 1;
+
+        const fecha = r.timestamp
+          ? new Date(r.timestamp)
+          : r.fecha?.seconds
+            ? new Date(r.fecha.seconds * 1000)
+            : r.fecha
+              ? new Date(r.fecha)
+              : null;
+
+        contenedor.innerHTML += `
+          <div class="cardResultado">
+
+            <div class="tituloActividad">
+              📋 ${r.tipo.toUpperCase()} REPORTE ${numero}
+            </div>
+
+            <div class="detalleResultado">
+              <strong>Nombre del proyecto:</strong> ${r.nombre}<br><br>
+              <strong>Responsable:</strong> ${r.responsable}<br><br>
+              <strong>Dependencia:</strong> ${r.dependencia}<br><br>
+
+              <strong>Reporte:</strong><br>
+              ${r.reporte}
+
+              <br><br>
+              🕒 ${
+                fecha
+                  ? fecha.toLocaleString("es-MX", {
+                      dateStyle: "medium",
+                      timeStyle: "short"
+                    })
+                  : "Sin fecha"
+              }
+            </div>
+
+          </div>
+        `;
+      });
+
+    })
+    .catch(err => {
+      console.error(err);
+    });
+}
+
+function aplicarPermisos(){
+
+  const controles = document.getElementById("controlesAdmin");
+
+  if(!controles) return;
+
+  if(rolUsuario === "usuario"){
+    controles.style.display = "none";
+  } else {
+    controles.style.display = "flex"; // 👈 importante
+  }
+    const panelAdmin = document.getElementById("panelAdmin");
+
+  if(rolUsuario === "usuario"){
+    panelAdmin.style.display = "none"; // 🔥 ocultar formulario
+  } else {
+    panelAdmin.style.display = "block"; // 👑 admin lo ve
+  }
+}
+
+function actualizarBotonAccion(){
+
+  const btn = document.getElementById("btnAccionPersona");
+
+  if(rolUsuario === "usuario"){
+
+    // 🔥 ocultar botón abajo (usuario no lo usa aquí)
+    btn.style.display = "none";
+
+  } else {
+
+    // 👑 ADMIN
+    btn.style.display = "block";
+    btn.innerHTML = "⬅ Volver";
+    btn.style.background = "#e5e7eb";
+    btn.style.color = "#111";
+    btn.style.padding = "10px";
+    btn.style.borderRadius = "8px";
+    btn.style.border = "none";
+    btn.style.cursor = "pointer";
+
+    btn.onclick = volverAPersonas;
+  }
+}
+function actualizarBotones(){
+
+  const btnLogout = document.getElementById("btnLogoutUsuario");
+  const btnVolver = document.getElementById("btnVolverAdmin");
+
+  if(rolUsuario === "usuario"){
+
+    // 👷 usuario
+    btnLogout.classList.remove("oculto");
+    btnVolver.classList.add("oculto");
+
+    btnLogout.onclick = logoutUsuario;
+
+  } else {
+
+    // 👑 admin
+    btnLogout.classList.add("oculto");
+    btnVolver.classList.remove("oculto");
+
+    btnVolver.onclick = volverAPersonas;
+  }
+}
+async function crearAdminsSeguro(){
+
+  const admins = [
+    {nombre:"Julio",                   email:"julio@CONUEE.com", pass:"191201"},
+    {nombre:"Abisai",                   email:"abisai@CONUEE.com", pass:"19122001"}, 
+    {nombre: "Ana Garzon",               email:"municipios@conuee.gop.mx", pass:"DEM2026@"},
+    
+  
+  ];
+
+  let creados = 0;
+  let existentes = 0;
+
+  for(const admin of admins){
+
+    try{
+
+      const userCredential = await auth.createUserWithEmailAndPassword(
+        admin.email,
+        admin.pass
+      );
+
+      const uid = userCredential.user.uid;
+
+      await db.collection("usuarios").doc(uid).set({
+        email: admin.email,
+        nombre: admin.nombre,
+        rol: "admin"
+      });
+
+      creados++;
+
+    }catch(e){
+
+      if(e.code === "auth/email-already-in-use"){
+        existentes++;
+      } else {
+        console.error(e);
+      }
+
+    }
+  }
+
+  alert(`✅ Proceso terminado\n\nCreados: ${creados}\nYa existían: ${existentes}`);
+
+  auth.signOut();
+}
+
+function mostrarModalUsuario(email, password){
+  document.getElementById("nuevoEmail").innerText = email;
+  document.getElementById("nuevoPassword").innerText = password;
+
+  document.getElementById("modalUsuarioCreado")
+    .classList.remove("oculto");
+}
+
+function cerrarModalUsuario(){
+  document.getElementById("modalUsuarioCreado")
+    .classList.add("oculto");
+}
+function togglePasswordUsuario(){
+
+  const input = document.getElementById("passwordUsuario");
+
+  if(input.type === "password"){
+    input.type = "text";
+  } else {
+    input.type = "password";
+  }
+}
+
+function toggleEditar(){
+
+  registroActivo.permisos.editar = !registroActivo.permisos.editar;
+
+  db.collection("registros")
+    .doc(registroActivo.id)
+    .update({
+      permisos: registroActivo.permisos
+    });
+
+  mostrarActividades();
+}
+
+function toggleEliminar(){
+
+  registroActivo.permisos.eliminar = !registroActivo.permisos.eliminar;
+
+  db.collection("registros")
+    .doc(registroActivo.id)
+    .update({
+      permisos: registroActivo.permisos
+    });
+
+  mostrarActividades();
+}
+function toggleEditarActividad(i){
+  const act = registroActivo.personas[personaActiva].actividades[i];
+
+  act.permisos = act.permisos || {editar:true, eliminar:true};
+
+  act.permisos.editar = !act.permisos.editar;
+
+  db.collection("registros")
+    .doc(registroActivo.id)
+    .update({
+  personas: JSON.parse(JSON.stringify(registroActivo.personas))
+});
+
+  mostrarActividades();
+}
+
+function toggleEliminarActividad(i){
+  const act = registroActivo.personas[personaActiva].actividades[i];
+
+  act.permisos = act.permisos || {editar:true, eliminar:true};
+
+  act.permisos.eliminar = !act.permisos.eliminar;
+
+  db.collection("registros")
+    .doc(registroActivo.id)
+    .update({
+  personas: JSON.parse(JSON.stringify(registroActivo.personas))
+});
+  mostrarActividades();
+}
+window.onload = () => {
+  mostrar("inicio");
+};
+
+function abrirEditarEstado(id){
+
+  estadoEditandoId = id;
+
+  const estado = registros.find(r => r.id === id);
+
+  document.getElementById("editNombre").value = estado.estado;
+
+  // ocultar campo puesto (porque es estado)
+  document.getElementById("editPuesto").style.display = "none";
+
+  document.getElementById("modalEditar").classList.remove("oculto");
+}
+
+function volverDesdeReportes(){
+
+  console.log("ROL ACTUAL:", rolUsuario);
+
+  if(rolUsuario === "admin"){
+    mostrar("pantallaCategorias");
+  } else if(rolUsuario === "usuario"){
+    mostrar("seleccionReporte");
+  } else {
+    // 🔥 fallback por si se pierde el rol
+    mostrar("inicio");
+  }
+
+}
+
+</script>
+
+</body>
+</html>
