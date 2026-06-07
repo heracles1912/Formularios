@@ -42,6 +42,12 @@
   transition:0.25s;
 }
 
+
+.btnExcel{
+  background:#1e6305;
+  color:#000;
+}
+
 /* HOVER PRO */
 .btnMenu:hover{
   transform:translateY(-2px) scale(1.03);
@@ -1309,7 +1315,7 @@ margin-top:10px;
 background:#000000;
 color:white;
 border:none;
-padding:8px 10px;
+padding:14px 20px;
 border-radius:5px;
 cursor:pointer;
 }
@@ -1318,21 +1324,7 @@ cursor:pointer;
 background:#9d9d9d;
 }
 
-.btnExcel{
-background:#03e957;
-  color:white;
-  border:none;
-  padding:10px 16px;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:bold;
-  transition:0.2s;
-}
 
-.btnExcel:hover{
-background:#a0eaa6;
-  transform:translateY(-1px);
-}
 
 .btnVolver{
 margin-top:12px;
@@ -2015,7 +2007,7 @@ body{
 
     <button class="btnLogin" onclick="loginAdmin()">Entrar</button>
     <button onclick="logout()" class="btnRojo">Volver</button>
-   <!-- <button class= "btnRojos"  onclick="crearAdminsSeguro()">🚀 Cargar admins</button>-->
+   <!--<button class= "btnRojos"  onclick="crearAdminsSeguro()">🚀 Cargar admins</button>-->
   </div>
 
 </div>
@@ -2117,7 +2109,7 @@ Guardar registro
   <!-- DERECHA -->
   <div class="panelListaPozos">
     <h2>Reportes</h2>
-    <h3>Edificios registrados:</h3>
+    <h3>Edificios públicos estatales o municipales registrados:</h3>
     <ul id="listaPersonas" class="listaPersonas"></ul>
   </div>
 
@@ -2481,7 +2473,7 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
       </div>
 
       <div class="grupoCampo">
-        <label>Cosas a reportar:</label>
+        <label>Acciones a reportar:</label>
         <textarea id="reporteExt" rows="4"></textarea>
       </div><br>
 
@@ -2511,21 +2503,21 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
     </div>
 
     <div class="panelFormulario">
-
+     
       <h2>📋 ¿Qué deseas reportar?</h2><br>
 
       <div class="botonesForm">
 
         <button class="btnVerde" onclick="abrirReporte('alumbrado')">
-          💡 Alumbrado
+          💡 Alumbrado público
         </button>
 
         <button class="btnVerde" onclick="abrirReporte('bombeo')">
-          🚰 Bombeo
+          🚰 Bombeo de agua potable
         </button>
 
        <button class="btnVerde" onclick="preguntarPrograma(registroActivo.id)">
-       🏢 Edificios
+       🏢 Edificios públicos estatales o municipales
       </button>
 
         <button class="btnVerde" onclick="abrirReporte('transporte')">
@@ -2594,7 +2586,7 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
         </div>
 
         <div class="grupoCampo">
-          <label>Cosas a reportar:</label>
+          <label>Acciones a reportar:</label>
           <textarea id="textoReporteGeneral" rows="5"></textarea>
         </div><br>
 
@@ -2694,11 +2686,15 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
     <div class="botonesForm">
 
       <button class="btnMenu btnAlumbrado" onclick="verReportesAdmin('alumbrado')">
-        💡 Alumbrado
+        💡 Alumbrado público
       </button>
 
       <button class="btnMenu btnBombeo" onclick="verReportesAdmin('bombeo')">
-        🚰 Bombeo
+        🚰 Bombeo de agua potable
+      </button>
+
+       <button class="btnMenu btnEdificios" onclick="verEdificiosAdmin()">
+        🏢 Edificios públicos estatales o municipales
       </button>
 
       <button class="btnMenu btnTransporte" onclick="verReportesAdmin('transporte')">
@@ -2709,12 +2705,13 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
         📦 Otro
       </button>
 
-      <button class="btnMenu btnEdificios" onclick="verEdificiosAdmin()">
-        🏢 Edificios
-      </button>
-
+     
       <button class="btnMenu btnCerrar" onclick="volverRegistros()">
         ❌ Cerrar
+      </button>
+      
+      <button class="btnMenu btnExcel" onclick="descargarExcelEstado()">
+      📥 Descargar Excel
       </button>
 
     </div>
@@ -3223,7 +3220,7 @@ function generarInputsMeses(){
 }
 
 
-    function guardarDatoBimestre(mes, valor){
+function guardarDatoBimestre(mes, valor){
   datosBimestre[mes] = valor;
 }
 
@@ -3311,6 +3308,7 @@ function validarMeses(){
 
   mostrarInputs(seleccionados);
 }
+
 function guardarReporteBimestral(){
 
   if(mesesSeleccionadosBim.length !== 2){
@@ -3357,6 +3355,7 @@ function guardarReporteBimestral(){
       alert("Error al guardar");
     });
 }
+
 function guardarReporteMensual(){
 
   if(mesesSeleccionados.length !== 2){
@@ -4669,6 +4668,7 @@ function guardarTodoEdificio(){
   mostrar("pozos");
   limpiarFormularioEdificio(); // 🔥 MUY IMPORTANTE
 }
+
 function guardarPersona(){
 
   const nombre = document.getElementById("nombrePersona").value;
@@ -5051,7 +5051,6 @@ function irUsuario(){
 
   document.getElementById("correoUsuario").value = "";
   document.getElementById("passwordUsuario").value = "";
-
   mostrar("loginUsuario");
 }
 function loginAdmin(){
@@ -5382,7 +5381,7 @@ async function crearAdminsSeguro(){
   const admins = [
     {nombre:"Julio",                   email:"julio@CONUEE.com", pass:"191201"},
     {nombre:"Abisai",                   email:"abisai@CONUEE.com", pass:"19122001"}, 
-    {nombre: "Ana Garzon",               email:"municipios@conuee.gop.mx", pass:"DEM2026@"},
+    {nombre: "Ana Garzon",               email:"municipios@conuee.gob.mx", pass:"DEM2026@"},
     
   
   ];
@@ -5533,6 +5532,333 @@ function volverDesdeReportes(){
     // 🔥 fallback por si se pierde el rol
     mostrar("inicio");
   }
+
+}
+
+async function descargarExcelEstado(){
+
+  const workbook = new ExcelJS.Workbook();
+  let edificiosConReportes = 0;
+
+  const nombresMes = {
+    ene:"Enero",
+    feb:"Febrero",
+    mar:"Marzo",
+    abr:"Abril",
+    may:"Mayo",
+    jun:"Junio",
+    jul:"Julio",
+    ago:"Agosto",
+    sep:"Septiembre",
+    oct:"Octubre",
+    nov:"Noviembre",
+    dic:"Diciembre"
+  };
+
+  const edificiosSnap = await db
+    .collection("registros")
+    .doc(registroActivo.id)
+    .collection("edificios")
+    .get();
+
+  for(const docEdificio of edificiosSnap.docs){
+
+    const edificio = docEdificio.data();
+
+    const hoja = workbook.addWorksheet(
+      (edificio.nombreEdificio || "Edificio")
+      .substring(0,31)
+    );
+
+    hoja.columns = [
+      { width: 40 },
+      { width: 25 }
+    ];
+
+    // ==========================
+    // INFORMACIÓN GENERAL
+    // ==========================
+
+hoja.addRow(["INFORMACIÓN GENERAL"]);
+
+const titulo = hoja.lastRow;
+
+// unir A1 y B1
+hoja.mergeCells(`A${titulo.number}:B${titulo.number}`);
+
+titulo.getCell(1).font = {
+  bold:true,
+  size:14,
+  color:{argb:"FFFFFF"}
+};
+
+titulo.getCell(1).fill = {
+  type:"pattern",
+  pattern:"solid",
+  fgColor:{argb:"23631F"}
+};
+
+titulo.getCell(1).alignment = {
+  horizontal:"center",
+  vertical:"middle"
+};
+
+titulo.height = 25;
+
+   
+
+    hoja.addRow(["Estado", registroActivo.estado || ""]);
+    hoja.addRow([
+      "Fecha",
+      edificio.fecha
+      ? edificio.fecha.toDate().toLocaleDateString()
+      : ""
+    ]);
+
+    hoja.addRow([
+      "Responsable",
+      edificio.responsable || ""
+    ]);
+
+    hoja.addRow([
+      "Dependencia",
+      edificio.dependencia || ""
+    ]);
+
+    hoja.addRow([
+      "Nombre del edificio",
+      edificio.nombreEdificio || ""
+    ]);
+
+    hoja.addRow([
+  "Tipo de consumo",
+  edificio.tipoLineaBase || ""
+]);
+
+    hoja.addRow([]);
+    hoja.addRow([]);
+
+    
+
+    const reportesSnap = await db
+      .collection("registros")
+      .doc(registroActivo.id)
+      .collection("edificios")
+      .doc(docEdificio.id)
+      .collection("reportes")
+      .orderBy("fecha")
+      .get();
+
+    if(reportesSnap.empty){
+  continue;
+}
+
+edificiosConReportes++;
+
+    let numeroReporte = 1;
+
+    reportesSnap.forEach(docReporte => {
+
+      const rep = docReporte.data();
+
+      // ======================
+      // REPORTE
+      // ======================
+
+hoja.addRow([
+  `REPORTE ${numeroReporte}`
+]);
+
+const reporteTitulo = hoja.lastRow;
+
+hoja.mergeCells(
+  `A${reporteTitulo.number}:B${reporteTitulo.number}`
+);
+
+reporteTitulo.getCell(1).font = {
+  bold:true,
+  size:12,
+  color:{argb:"FFFFFF"}
+};
+
+reporteTitulo.getCell(1).fill = {
+  type:"pattern",
+  pattern:"solid",
+  fgColor:{argb:"93C572"}
+};
+
+reporteTitulo.getCell(1).alignment = {
+  horizontal:"center",
+  vertical:"middle"
+};
+
+reporteTitulo.height = 22;
+      
+
+      // ======================
+// MENSUAL
+// ======================
+
+if(
+  typeof rep.consumo === "object" &&
+  !Array.isArray(rep.consumo)
+){
+
+
+  // Encabezado
+  let encabezado = hoja.addRow([
+    "Mes",
+    "Consumo (kWh)"
+  ]);
+
+  encabezado.eachCell(cell => {
+
+    cell.font = {
+      bold:true,
+      color:{argb:"FFFFFF"}
+    };
+
+    cell.fill = {
+      type:"pattern",
+      pattern:"solid",
+      fgColor:{argb:"90E0EF"}
+    };
+
+    cell.alignment = {
+      horizontal:"center",
+      vertical:"middle"
+    };
+
+  });
+
+  // Datos
+  rep.meses.forEach(mes => {
+
+    const filaConsumo = hoja.addRow([
+      nombresMes[mes],
+      Number(rep.consumo[mes] || 0)
+    ]);
+
+    filaConsumo.getCell(2).numFmt = '#,##0';
+
+    filaConsumo.eachCell(cell => {
+
+      cell.alignment = {
+        horizontal:"center",
+        vertical:"middle"
+      };
+
+    });
+
+  });
+
+}
+
+     // ======================
+// BIMESTRAL
+// ======================
+
+else{
+
+
+  // Encabezado
+  let encabezado = hoja.addRow([
+    "Periodo",
+    "Consumo (kWh)"
+  ]);
+
+  encabezado.eachCell(cell => {
+
+    cell.font = {
+      bold:true,
+      color:{argb:"FFFFFF"}
+    };
+
+    cell.fill = {
+      type:"pattern",
+      pattern:"solid",
+      fgColor:{argb:"FFBA6A"}
+    };
+
+    cell.alignment = {
+      horizontal:"center",
+      vertical:"middle"
+    };
+
+  });
+
+  // Datos
+  const filaConsumo = hoja.addRow([
+    `${nombresMes[rep.meses[0]]}-${nombresMes[rep.meses[1]]}`,
+    Number(rep.consumo || 0)
+  ]);
+
+  filaConsumo.getCell(2).numFmt = '#,##0';
+
+}
+
+      hoja.addRow([]);
+      hoja.addRow([]);
+
+      numeroReporte++;
+
+    });
+
+    // ==========================
+    // ESTILOS GENERALES
+    // ==========================
+
+    hoja.eachRow((row)=>{
+
+      row.eachCell((cell)=>{
+
+        cell.border = {
+          top:{style:"thin"},
+          left:{style:"thin"},
+          bottom:{style:"thin"},
+          right:{style:"thin"}
+        };
+
+        cell.alignment = {
+          horizontal:"center",
+          vertical:"middle"
+        };
+
+      });
+
+    });
+
+  }
+
+  if(edificiosConReportes === 0){
+
+  alert(
+    "⚠️ Ningún edificio tiene reportes registrados para generar el Excel."
+  );
+
+  return;
+}
+
+  const buffer = await workbook.xlsx.writeBuffer();
+
+  saveAs(
+    new Blob([buffer]),
+    `${registroActivo.estado}.xlsx`
+  );
+
+const tipoRow = hoja.addRow([
+  "TIPO DE CONSUMO",
+  "MENSUAL"
+]);
+
+tipoRow.getCell(1).font = {
+  bold:true
+};
+
+tipoRow.getCell(2).font = {
+  bold:true,
+  color:{argb:"166534"}
+};
 
 }
 
