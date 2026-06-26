@@ -13,11 +13,146 @@
 <script src="https://cdn.jsdelivr.net/npm/file-saver/dist/FileSaver.min.js"></script>
 
 <style>
+    /* Botón normal */
+.btnOpcion{
+    background:#e9e9ef;
+    border:none;
+    border-radius:14px;
+    padding:18px;
+    font-size:22px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:all .25s ease;
+}
+
+/* Hover */
+.btnOpcion:hover{
+    transform:scale(1.02);
+}
+
+/* Sí seleccionado */
+.btnOpcion.siActivo{
+    background:#28a745;
+    color:#fff;
+    box-shadow:0 0 15px rgba(40,167,69,.5);
+}
+
+/* No seleccionado */
+.btnOpcion.noActivo{
+    background:#dc3545;
+    color:#fff;
+    box-shadow:0 0 15px rgba(220,53,69,.5);
+}
+    #nuevoEmail,
+#nuevoPassword{
+    background:#eef6ff;
+    color:#0d47a1;
+    padding:4px 8px;
+    border-radius:6px;
+    font-weight:bold;
+}
+    .tablaResumen{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
+}
+
+.tablaResumen th{
+  background:#1e5b4f;
+  color:white;
+  padding:10px;
+  text-align:center;
+}
+
+.tablaResumen td{
+  border:1px solid #221e1e;
+  padding:8px;
+  text-align:center;
+}
+.textoAyuda{
+    text-align:justify;
+    text-justify:inter-word;
+    line-height:1.7;
+    font-size:18px;
+}
+    .opcionesAccion{
+    display:flex;
+    gap:15px;
+    margin-top:10px;
+}
+
+.btnOpcion{
+    flex:1;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:bold;
+    background:#e5e7eb;
+    transition:.25s;
+}
+
+.btnOpcion:hover{
+    transform:translateY(-2px);
+}
+
+.btnActivoSi{
+    background:#22c55e;
+    color:white;
+}
+
+.btnActivoNo{
+    background:#ef4444;
+    color:white;
+}
+
+.panelOculto{
+    display:none;
+    margin-top:20px;
+
+    animation:aparece .3s ease;
+}
+
+.panelOculto textarea{
+    width:100%;
+    box-sizing:border-box;
+
+    padding:15px;
+    border-radius:12px;
+    font-size:16px;
+
+    resize:vertical;
+}
+
+@keyframes aparece{
+
+    from{
+        opacity:0;
+        transform:translateY(-10px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+    .mensajeAviso{
+    margin-top:25px;
+    padding:15px 20px;
+    border-radius:12px;
+    background:rgba(255,255,255,0.15);
+    color:#fff;
+    font-size:19px;
+    text-align:center;
+    line-height:1.7;
+}
   .cardMenuAdmin{
    background: linear-gradient(135deg, #1e5b4f, #f1f5f9);
   padding:40px;
   border-radius:20px;
-  width:350px;
+  width:550px;
   margin:auto;
   margin-top:80px;
   box-shadow:0 20px 50px rgba(0,0,0,0.25);
@@ -44,7 +179,7 @@
 
 
 .btnExcel{
-  background:#1e6305;
+  background:#288108;
   color:#000;
 }
 
@@ -156,7 +291,7 @@
   margin-top:3px;
 }
 .itemReporteExterno{
-  background: linear-gradient(135deg, #ffffff, #f8fafc);
+  background: linear-gradient(135deg, #b2b2b2, #f1f5f9);
   padding:18px;
   border-radius:18px;
   margin-bottom:15px;
@@ -318,11 +453,14 @@
   background:#dbeafe;
 }
 
+/* Mes seleccionado */
 .opcionMes.activo{
-  background:#3b82f6;
-  color:white;
-  font-weight:bold;
+    background:#28a745;
+    color:white;
+    font-weight:bold;
+    box-shadow:0 0 12px rgba(40,167,69,.45);
 }
+
 .cardResultado{
   width:100%;              /* 🔥 ocupa todo el ancho */
   box-sizing:border-box;   /* 🔥 no se desborde */
@@ -330,7 +468,7 @@
   padding:20px;
   border-radius:18px;
 
-  background: linear-gradient(135deg, #b3b1b1, #f1f5f9);
+  background: linear-gradient(135deg, #b2b2b2, #f1f5f9);
   box-shadow:0 10px 25px rgba(0,0,0,0.1);
 
   display:flex;            /* 👇 esto mejora estructura interna */
@@ -358,18 +496,13 @@
   background-size:16px;
 }
 
-/* HOVER */
-.grupoCampo select:hover{
-  border-color:#3b82f6;
+.grupoCampo label{
+    font-size:18px;      /* Cambia a 20px si los quieres más grandes */
+    font-weight:bold;
+    margin-bottom:8px;
 }
 
-/* FOCUS */
-.grupoCampo select:focus{
-  border-color:#3b82f6;
-  outline:none;
-  box-shadow:0 0 0 4px rgba(59,130,246,0.2);
-}
-    .filaAcciones{
+.filaAcciones{
   display:flex;
   justify-content:center;
   gap:8px;
@@ -394,30 +527,7 @@
 }
   #modalUsuarioCreado .modalContenido{
   background:#5280ca;
-  color:white;
-}
-
-#modalUsuarioCreado strong{
-  color:#38bdf8;
-}
-.tablaActividades tbody tr:nth-child(odd){
-  background:#ffffff;
-}
-
-.tablaActividades tbody tr:nth-child(even){
-  background:#f8fafc;
-}
-
-.tablaActividades tbody tr:hover{
-  background:#e0f2fe;
-  transform:scale(1.005);
-}
-
-  #resultadoComparacion{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  margin-top:10px;
+  color:rgb(27, 16, 16);
 }
 
 /* TARJETAS */
@@ -502,6 +612,8 @@
   gap:20px;
   animation:fadeIn 0.3s ease;
   overflow:hidden; 
+  max-height:90vh;   /* 🔥 Altura máxima de la ventana */
+    overflow-y:auto;   /* 🔥 Barra deslizadora */
 }
 
 /* TITULO */
@@ -520,11 +632,6 @@
   transition:0.2s;
 }
 
-.modalContenido input:focus{
-  border-color:#3b82f6;
-  outline:none;
-  box-shadow:0 0 0 4px rgba(59,130,246,0.2);
-}
 
     .gridPersonas{
   display:grid;
@@ -776,7 +883,7 @@ input[type="date"]{
 }
 
 button:hover{
-  background:#c8e6c9;
+  background:#999b99;
   transform:scale(1.05);
 }
     input[type="time"]{
@@ -966,7 +1073,7 @@ background:#f2f2f2;
 
 .seccion{
 display:none;
-  max-width:1000px;
+  max-width:1600px;
   margin:40px auto;
 
   background: transparent; /* 👈 AQUÍ */
@@ -1152,11 +1259,7 @@ flex-direction:column;
 margin-bottom:10px;
 }
 
-.grupoInput label{
-font-size:13px;
-color:#555;
-margin-bottom:3px;
-}
+
 
 .grupoInput input{
 padding:7px;
@@ -1249,12 +1352,12 @@ width:320px;
 }
 #pantallaReportes .panelListaPozos{
   width:93%;
-  max-width:1000px;
+  max-width:none;
   margin:auto;
   overflow-y: auto; 
 }
 .panelListaPozos{
-  flex:1;
+  flex:3;
   background: linear-gradient(200deg, #1e5b4f, #dadadb);
   padding:20px;
   border-radius:15px;
@@ -1270,6 +1373,7 @@ width:320px;
 
   overflow:hidden;     /* 🔥 importante */
 }
+
 #listaPersonas{
   flex:1;
   overflow-y:auto;  /* 👈 aquí vive el scroll */
@@ -1294,8 +1398,8 @@ margin-bottom:12px;
 }
 
 .grupoInput label{
-font-size:13px;
-color:#666;
+font-size:18px;
+color:#d72e2e;
 margin-bottom:3px;
 }
 
@@ -1350,17 +1454,68 @@ background:#e5e5e5;
 
 /* PANEL IZQUIERDO */
 .panelLista{
-  width:350px; /* 👈 ancho fijo más compacto */
+  width:280px; /* 👈 ancho fijo más compacto */
 }
 
 /* PANEL DERECHO */
 .panelFormulario{
-  width:320px;
+  width:260px;
   padding:25px;
   border-radius:20px;
 background: linear-gradient(135deg, #1e5b4f, #f1f5f9);
   box-shadow:0 10px 25px rgba(0,0,0,0.08);
 }
+
+/* PANEL MENSUAL DATOS GENERALES - Nuevo Edificio */
+.panelFormulario1{
+  width:420px;
+  padding:25px;
+  border-radius:20px;
+background: linear-gradient(135deg, #1e5b4f, #f1f5f9);
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+.panelFormulario2{
+  width:620px;
+  padding:25px;
+  border-radius:20px;
+background: linear-gradient(135deg, #1e5b4f, #f1f5f9);
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+
+.panelFormulario1 input{
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  margin-top:5px;
+  margin-bottom:15px;
+  font-size:14px;
+}
+
+.panelFormulario1 input:focus{
+  border-color:#2e7d32;
+  outline:none;
+  box-shadow:0 0 0 2px rgba(46,125,50,0.2);
+  
+}
+
+.panelFormulario2 input{
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  margin-top:5px;
+  margin-bottom:15px;
+  font-size:14px;
+}
+
+.panelFormulario2 input:focus{
+  border-color:#2e7d32;
+  outline:none;
+  box-shadow:0 0 0 2px rgba(46,125,50,0.2);
+}
+
+
 
 
 .listaRegistros{
@@ -1648,6 +1803,27 @@ margin-left: auto;
 margin-right: auto;
 }
 
+.loginCardegeneral {
+background: transparent;
+padding: 40px;
+border-radius: 15px;
+
+width:95%;
+max-width:1500px;
+
+display: flex;              /* activa flex */
+flex-direction: column;     /* elementos en vertical */
+align-items: center;        /* centra horizontal */
+justify-content: center;    /* centra vertical */
+
+gap: 15px;
+text-align: left;
+
+
+margin-left: auto;
+margin-right: auto;
+}
+
 .loginCardesin {
 background: transparent;
 padding: 40px;
@@ -1850,6 +2026,7 @@ body{
   .loginCardi,
   .loginCardlogo,
   .loginCarde,
+  .loginCardegeneral,
   .loginCardes,
   .loginCardesen,
   .loginCardesin{
@@ -1872,8 +2049,26 @@ body{
 </style>
 </head>
 
-<!-- ================= ADMINISTRADOR  ================= -->
+<!-- ================= EDITAR PERSONA  ================= -->
 
+
+
+<div id="modalEditar" class="modal oculto">
+
+  <div class="modalContenido">
+    <h3>✏️ Editar Persona</h3>
+
+    <input id="editNombre" placeholder="Nombre">
+    <input id="editPuesto" placeholder="Puesto">
+
+    <div class="accionesModal">
+      <button class="btnCancelarModal" onclick="cerrarModal()">❌ Cancelar</button>
+      <button class="btnGuardarModal" onclick="guardarEdicion()">💾 Guardar</button>
+    </div>
+  </div>
+
+</div>
+<!-- ================= ADMINISTRADOR  ================= -->
 
 <body>
 <div id="inicio" class="seccion activo">
@@ -1922,26 +2117,6 @@ body{
   </div>
 
 </div>
-<!-- ================= EDITAR PERSONA  ================= -->
-
-
-
-<div id="modalEditar" class="modal oculto">
-
-  <div class="modalContenido">
-    <h3>✏️ Editar Persona</h3>
-
-    <input id="editNombre" placeholder="Nombre">
-    <input id="editPuesto" placeholder="Puesto">
-
-    <div class="accionesModal">
-      <button class="btnCancelarModal" onclick="cerrarModal()">❌ Cancelar</button>
-      <button class="btnGuardarModal" onclick="guardarEdicion()">💾 Guardar</button>
-    </div>
-  </div>
-
-</div>
-
 <!-- ================= USUARIO  ================= -->
 <div id="loginUsuario" class="seccion">
 
@@ -2015,7 +2190,6 @@ body{
 
 <!-- ================= REGISTROS  ================= -->
 
-
 <div id="registros" class=" seccion">
 
   <div class="loginCarde">
@@ -2046,8 +2220,6 @@ body{
 <div class="formActividad">
 <h3 id="bienvenidaAdmin"> Bienvenido</h3>
 <h2>Registro de nuevo Estado</h2>
-
-
 
 <div class="grupoCampo">
 <label>Estado:</label>
@@ -2115,11 +2287,16 @@ Guardar registro
 
 </div>
 </div>
+<p class="mensajeAviso">
+  En caso de ser necesaria alguna modificación, favor de notificar a
+  <strong>c</strong>
+  con su debida justificación.
+</p>
 </div>
   
 <!-- Registro Parte 1 -->
 <div id="formEdificio" class="seccion">
-<div class="loginCardes">
+<div class="loginCardegeneral">
 
   
     <div class="loginCardlogos">
@@ -2128,7 +2305,7 @@ Guardar registro
       </div>
     </div>
     
-  <div class="panelFormulario">
+  <div class="panelFormulario2">
     <h2>🏢 Nuevo Edificio</h2><br>
 
     <div class="grupoCampo">
@@ -2163,7 +2340,7 @@ Guardar registro
 </div>
 <!-- Registro Parte 2 -->
 <div id="formEdificioParte2" class="seccion">
-<div class="loginCardes">
+<div class="loginCardegeneral">
 
     <div class="loginCardlogos">
       <div class="header-card">
@@ -2171,7 +2348,7 @@ Guardar registro
       </div>
     </div>
     
-  <div class="panelFormulario">
+  <div class="panelFormulario2">
     <h2>Información del edificio </h2><br>
 
     <div class="grupoCampo">
@@ -2224,7 +2401,7 @@ Guardar registro
 
 <!-- Registro Parte 3 -->
 <div id="formEdificioParte3" class="seccion">
-<div class="loginCardes">
+<div class="loginCardegeneral">
 
     <div class="loginCardlogos">
       <div class="header-card">
@@ -2232,7 +2409,7 @@ Guardar registro
       </div>
     </div>
     
-  <div class="panelFormulario">
+  <div class="panelFormulario2">
     <h2>Información de consumo eléctrico</h2><br>
 
     <div class="grupoCampo">
@@ -2240,16 +2417,39 @@ Guardar registro
       <input id="tarifelectric">
     </div>
 
-
-    <div class="grupoCampo">
-      <label>Consumo eléctrico total del año calendario anterior en KWh (Línea Base) [KWh]:</label>
-      <input id="consumlineabase">
-    </div>
-
     <div class="grupoCampo">
       <label>Facturación eléctrica total del año calendario anterior [$]:</label>
       <input id="factlineabse">
     </div>
+
+    <div class="grupoCampo">
+
+  <label>Línea base de consumo eléctrico (kWh)</label>
+
+  <div class="grupoCampo">
+    <label>Indica Mes y AÑo, de inicio y fin de linea base <br> <br>
+       -Tarifa mensual: Enero - Diciembre 2024, febrero 2023 - Enero 2024, Octubre 2024 - Septiembre 2025, etc.<br><br>
+       -Tarifa bimestral: Septiembre 2023 - Septiembre 2024, Marzo 2024 - Marzo 2025, octubre 2024 - octubre 2025 ,etc.</label>
+    <input id="anioBase">
+  
+  </div>
+
+  <table class="tablaLineaBase">
+
+    <thead>
+      <tr>
+        <th>Periodo</th>
+        <th>Consumo total (kWh)</th>
+      </tr>
+    </thead>
+
+    <tbody id="tablaLineaBaseBody">
+
+    </tbody>
+
+  </table>
+
+</div>
 
     <button class="btnVerde" onclick="guardarParte3()">Siguiente ➡</button>
     <button class="btnRojo" onclick="mostrar('formEdificioParte2')">⬅ Volver</button>
@@ -2260,7 +2460,7 @@ Guardar registro
 
 <!-- Registro Parte 4 -->
 <div id="formEdificioParte4" class="seccion">
-<div class="loginCardes">
+<div class="loginCardegeneral">
 
     <div class="loginCardlogos">
       <div class="header-card">
@@ -2268,13 +2468,11 @@ Guardar registro
       </div>
     </div>
     
-  <div class="panelFormulario">
+  <div class="panelFormulario2">
     <h2>Información de consumo eléctrico</h2><br>
 
      <div class="grupoCampo">
-      <label>Su linea base es:<br><br>
-       -Tarifa mensual: Enero - Diciembre 2024, febrero 2023 - Enero 2024, Octubre 2024 - Septiembre 2025, etc.<br><br>
-       -Tarifa bimestral: Septiembre 2023 - Septiembre 2024, Marzo 2024 - Marzo 2025, octubre 2024 - octubre 2025 ,etc.
+      <label>Su linea base es:<br>
 
       </label><br>
       <select id="lineabase">
@@ -2316,12 +2514,18 @@ Guardar registro
   </div>
 
 </div>
+
+<p class="mensajeAviso">
+  En caso de ser necesaria alguna modificación, favor de notificar a
+  <strong>municipios@conuee.gob.mx</strong>
+  con su debida justificación.
+</p>
 </div>
 
 <!-- REPORTES de edificos Parte 1 -->
 <div id="reporteParte1" class="seccion">
 
-  <div class="panelFormulario">
+  <div class="panelFormulario2">
     <h2>📊 Reporte - Parte 1</h2>
 
     <p><strong>Responsable:</strong> <span id="verResponsable"></span></p><br>
@@ -2343,7 +2547,7 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
 <!-- REPORTES de edificos Parte 2 -->
 <div id="reporteParte2" class="seccion">
 
-  <div class="panelFormulario">
+  <div class="panelFormulario2">
     <h2>⚡ Reporte - Parte 2</h2>
 
     <div class="grupoCampo">
@@ -2360,7 +2564,7 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
  <!-- REPORTES de edificos Parte 3 -->
 <div id="reporteParte3" class="seccion">
 
-  <div class="panelFormulario">
+  <div class="panelFormulario2">
     <h2>🏢 Reporte - Parte 3</h2>
 
     <div class="grupoCampo">
@@ -2376,7 +2580,7 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
  <!-- REPORTES de edificos CONFIRMACION -->
   <div id="reporteConfirmacion" class="seccion">
 
-  <div class="panelFormulario">
+  <div class="panelFormulario2">
     <h2>📋 Confirmación del reporte</h2>
 
     <div id="resumenReporte"></div>
@@ -2392,7 +2596,7 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
 <div class="loginContainer">
 
   
-  <div class="panelFormulario">
+  <div class="panelFormulario2">
 
       <div class="loginCardlogos">
       <div class="header-card">
@@ -2412,37 +2616,9 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
 </div>
 
 
-<div id="modalActividad" class="modal oculto">
-
-  <div class="modalContenido">
-    <h3>✏️ Editar Actividad</h3>
-
-    <input id="editActNombre" placeholder="Actividad">
-
-    <label>Fecha inicio</label>
-    <input type="date" id="editActFecha">
-
-    <label>Hora inicio</label>
-    <input type="time" id="editActInicio">
-
-    <label>Fecha fin</label>
-    <input type="date" id="editActFechaFin">
-
-    <label>Hora fin</label>
-    <input type="time" id="editActFin">
-
-    <div class="accionesModal">
-      <button class="btnCancelarModal" onclick="cerrarModalActividad()">❌ Cancelar</button>
-      <button class="btnGuardarModal" onclick="guardarActividadEditada()">💾 Guardar</button>
-    </div>
-  </div>
-
-</div>
-
-
 <!-- Reporte de no pertencia al programa -->
 <div id="reporteExterno" class="seccion">
-<div class="loginCardesen">
+<div class="loginCardegeneral">
 <div class="loginCardlogos">
       <div class="header-card">
         <img src="conuee.png" class="logos">
@@ -2453,12 +2629,12 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
 
     <!-- IZQUIERDA -->
     <div class="panelListaPozos">
-      <h3>📋 Reportes enviados</h3>
+      <h2>📋 Reportes enviados</h2><br>
       <div id="listaReportesExternos"></div>
     </div>
 
     <!-- DERECHA -->
-    <div class="panelFormulario">
+    <div class="panelFormulario1">
 
       <h2>📋 Nuevo reporte</h2><br>
 
@@ -2473,9 +2649,46 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
       </div>
 
       <div class="grupoCampo">
-        <label>Acciones a reportar:</label>
-        <textarea id="reporteExt" rows="4"></textarea>
-      </div><br>
+
+  <label>¿Cuenta con información o resultados que reportar?</label>
+
+  <div class="opcionesAccion">
+
+    <button type="button"
+            class="btnOpcion"
+            id="btnSiExt"
+            onclick="mostrarAccionesExterno(true)">
+      ✅ Sí
+    </button>
+
+    <button type="button"
+            class="btnOpcion"
+            id="btnNoExt"
+            onclick="mostrarAccionesExterno(false)">
+      ❌ No
+    </button>
+
+  </div>
+
+</div>
+
+<div id="panelAccionesExt" class="panelOculto">
+<div class="grupoCampo">
+   <p class="textoAyuda">
+    <label>En esta sección reportar información (por ejemplo: KWh consumidos, 
+        número de luminarios, cantidad de vehículos, m2 construidos, etc.) o 
+        ahorros obtenidos (KWh, litros de combustible ahorrados, equipos sustituidos).</label>
+</p>
+
+  <textarea
+      id="reporteExt"
+      rows="4"
+      placeholder="Escriba aquí las acciones realizadas..."
+  ></textarea>
+</div>
+</div>
+
+<br>
 
       <button class="btnVerde" onclick="guardarReporteExterno()">
         Guardar
@@ -2490,6 +2703,11 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
   </div>
 
 </div>
+ <p class="mensajeAviso">
+  En caso de ser necesaria alguna modificación, favor de notificar a
+  <strong>municipios@conuee.gob.mx</strong>
+  con su debida justificación.
+</p>
 </div>
 
 <div id="seleccionReporte" class="seccion">
@@ -2502,7 +2720,7 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
       </div>
     </div>
 
-    <div class="panelFormulario">
+    <div class="panelFormulario2">
      
       <h2>📋 ¿Qué deseas reportar?</h2><br>
 
@@ -2543,7 +2761,7 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
 
 <div id="reporteGeneral" class="seccion">
 
-  <div class="loginCarde">
+  <div class="loginCardegeneral">
 
     <!-- LOGO -->
     <div class="loginCardlogos">
@@ -2555,7 +2773,7 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
     <div class="contenedorRegistros">
 
       <!-- IZQUIERDA -->
-      <div class="panelFormulario">
+      <div class="panelFormulario1">
 
         <h2 id="tituloReporteGeneral">📋 Reporte</h2><br>
 
@@ -2566,7 +2784,7 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
         </div>
 
         <div class="grupoCampo">
-          <label>Nombre del proyecto:</label>
+          <label>Nombre del proyecto o acción:</label>
           <input id="nombreReporte">
         </div>
 
@@ -2585,19 +2803,55 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
           <input id="dependenciaReporte">
         </div>
 
-        <div class="grupoCampo">
-          <label>Acciones a reportar:</label>
-          <textarea id="textoReporteGeneral" rows="5"></textarea>
-        </div><br>
+       <div class="grupoCampo">
 
-        <button class="btnVerde" onclick="guardarReporteSimple()">
-          💾 Guardar
+    <label>¿Cuenta con información o resultados que reportar?</label>
+
+    <div class="opcionesAccion">
+
+        <button type="button"
+                class="btnOpcion"
+                id="btnSi"
+                onclick="mostrarAcciones(true)">
+            ✅ Sí
         </button>
 
-    <button class="btnRojo" onclick="volverDesdeReportes()">
-  ⬅ Volver
+        <button type="button"
+                class="btnOpcion"
+                id="btnNo"
+                onclick="mostrarAcciones(false)">
+            ❌ No
+        </button>
+
+    </div>
+
+</div>
+
+<div id="panelAcciones" class="panelOculto">
+<div class="grupoCampo">
+    <p class="textoAyuda">
+    <label>En esta sección reportar información (por ejemplo: KWh consumidos, 
+        número de luminarios, cantidad de vehículos, m2 construidos, etc.) o 
+        ahorros obtenidos (KWh, litros de combustible ahorrados, equipos sustituidos).</label>
+</p>
+    <textarea
+        id="textoReporteGeneral"
+        rows="5"
+        placeholder="Escriba aquí las acciones realizadas..."
+    ></textarea>
+
+</div>
+</div>
+
+<br>
+
+<button class="btnVerde" onclick="guardarReporteSimple()">
+    💾 Guardar
 </button>
 
+<button class="btnRojo" onclick="volverDesdeReportes()">
+    ⬅ Volver
+</button>
       </div>
 
       <!-- DERECHA -->
@@ -2613,6 +2867,11 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
 
   </div>
 
+ <p class="mensajeAviso">
+  En caso de ser necesaria alguna modificación, favor de notificar a
+  <strong>municipios@conuee.gob.mx</strong>
+  con su debida justificación.
+</p>
 </div>
 
 <div id="modalPrograma" class="modal oculto">
@@ -2724,39 +2983,77 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
 
 <!-- reporte mensual 1    -->
 <div id="mensualParte1" class="seccion">
-<div class="loginCardes">
+<div class="loginCardegeneral">
 
    <div class="loginCardlogos">
         <div class="header-card">
         <img src="conuee.png" class="logos">
         </div>
     </div>
-    
-  <div class="panelFormulario">
-    <h2>📅 Mensual - Datos generales</h2><br>
+  <div class="panelFormulario2">
+  <h2>📅 Mensual - Datos generales</h2><br>
 
-    <div class="grupoCampo">
-      <label>Funcionario responsable de emitir el reporte: </label>
-      <input id="m1_responsable">
-    </div>
-
-    <div class="grupoCampo">
-      <label>¿Durante el periodo se presento algún evento que modifico el consumo del edificio? (Justifica):</label>
-      <input id="m1_evento">
-    </div>
-
-    <button class="btnVerde" onclick="mostrar('mensualParte2')">Siguiente ➡</button>
-    <button class="btnRojo" onclick="volverAReportesDesdeMensual()">
-  ⬅ Volver
-</button>
+  <div class="grupoCampo">
+    <label>Funcionario responsable de emitir el reporte:</label>
+    <input id="m1_responsable">
   </div>
+
+  <div class="grupoCampo">
+
+    <label>¿Durante el periodo se presentó algún evento que modificó el consumo del edificio?</label>
+
+    <div class="opcionesAccion">
+
+      <button type="button"
+              class="btnOpcion"
+              id="btnSiMensual"
+              onclick="mostrarEventoMensual(true)">
+        ✅ Sí
+      </button>
+
+      <button type="button"
+              class="btnOpcion"
+              id="btnNoMensual"
+              onclick="mostrarEventoMensual(false)">
+        ❌ No
+      </button>
+
+    </div>
+
+  </div>
+
+  <div id="panelEventoMensual" class="panelOculto">
+
+    <div class="grupoCampo">
+      <label>Justifique el evento presentado:</label>
+
+      <textarea
+        id="m1_evento"
+        rows="4"
+        placeholder="Describa el evento ocurrido..."></textarea>
+    </div>
+
+  </div> <br>
+
+
+  <button class="btnVerde" onclick="mostrar('mensualParte2')">
+    Siguiente ➡
+  </button>
+
+  <button class="btnRojo" onclick="volverAReportesDesdeMensual()">
+    ⬅ Volver
+  </button>
+
+</div>
+
+</div>
 </div>
 </div>
 
 
 <!-- reporte mensual 2   -->
 <div id="mensualParte2" class="seccion">
-  <div class="loginCardes">
+  <div class="loginCardegeneral">
 
      <div class="loginCardlogos">
         <div class="header-card">
@@ -2764,8 +3061,8 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
         </div>
     </div>
 
-<div class="panelFormulario">
-  <label><h2>Selecciona 2 meses</h2></label><br>
+<div class="panelFormulario2">
+  <h2>Selecciona los 2 meses del periodo por reportar</h2><br>
 
   <div class="selectorModerno">
     <div class="opcionMes" onclick="toggleMes(this,'ene')">Enero</div>
@@ -2800,7 +3097,7 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
 
 <!-- reporte mensual 3  -->
 <div id="mensualParte3" class="seccion">
-   <div class="loginCardes">
+   <div class="loginCardegeneral">
 
      <div class="loginCardlogos">
         <div class="header-card">
@@ -2808,7 +3105,7 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
         </div>
     </div>
     
-  <div class="panelFormulario">
+  <div class="panelFormulario2">
     <h2>📋 Confirmación mensual</h2>
 
     <div id="resumenMensual"></div><br>
@@ -2821,7 +3118,7 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
 
 <!-- reporte bimestral 1  -->
 <div id="bimestralParte1" class="seccion">
- <div class="loginCardes">
+ <div class="loginCardegeneral">
 
   <div class="loginCardlogos">
         <div class="header-card">
@@ -2829,38 +3126,74 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
         </div>
     </div>
     
-  <div class="panelFormulario">
-    <h2>📅 Bimestral - Datos generales</h2><br>
+  <div class="panelFormulario2">
+  
+  <h2>📅 Bimestral - Datos generales</h2><br>
 
-
-    <div class="grupoCampo">
-      <label>Funcionario responsable de emitir el reporte: </label>
-      <input id="b1_responsable">
-    </div>
-
-    <div class="grupoCampo">
-      <label>¿Durante el periodo se presento algún evento que modifico el consumo del edificio? (Justifica): </label>
-      <input id="b1_periodo">
-    </div>
-
-    <button class="btnVerde" onclick="mostrar('bimestralParte2')">Siguiente ➡</button>
-    <button class="btnRojo" onclick="volverABimestral()">
-  ⬅ Volver
-</button>
+  <div class="grupoCampo">
+    <label>Funcionario responsable de emitir el reporte:</label>
+    <input id="b1_responsable">
   </div>
+
+  <div class="grupoCampo">
+
+    <label>¿Durante el periodo se presentó algún evento que modificó el consumo del edificio?</label>
+
+    <div class="opcionesAccion">
+
+      <button type="button"
+              class="btnOpcion"
+              id="btnSiBimestral"
+              onclick="mostrarEventoBimestral(true)">
+        ✅ Sí
+      </button>
+
+      <button type="button"
+              class="btnOpcion"
+              id="btnNoBimestral"
+              onclick="mostrarEventoBimestral(false)">
+        ❌ No
+      </button>
+
+    </div>
+
+  </div>
+
+  <div id="panelEventoBimestral" class="panelOculto">
+
+    <div class="grupoCampo">
+      <label>Justifique el evento presentado:</label>
+
+      <textarea
+        id="b1_periodo"
+        rows="4"
+        placeholder="Describa el evento ocurrido..."></textarea>
+    </div>
+
+  </div><br>
+
+  <button class="btnVerde" onclick="mostrar('bimestralParte2')">
+    Siguiente ➡
+  </button>
+
+  <button class="btnRojo" onclick="volverABimestral()">
+    ⬅ Volver
+  </button>
+
+</div>
 </div>
 </div>
 
 
 <!-- reporte bimestral 2  -->
  <div id="bimestralParte2" class="seccion">
-<div class="loginCardes">
+<div class="loginCardegeneral">
    <div class="loginCardlogos">
         <div class="header-card">
         <img src="conuee.png" class="logos">
         </div>
     </div>
-<div class="panelFormulario">
+<div class="panelFormulario2">
 <label><h2>Selecciona el rango de meses</h2></label><br>
 
 <div class="selectorModerno">
@@ -2880,7 +3213,7 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
 
 <div id="inputConsumoBimestre"></div><br>
 
-<button class="btnVerde" onclick="llenarResumenBimestralFlexible()">
+<button class="btnVerde" onclick="llenarResumenBimestral()">
   Siguiente ➡
 </button>
     <button class="btnRojo" onclick="mostrar('bimestralParte1')">
@@ -2893,7 +3226,7 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
 
 <!-- reporte bimestral 3  -->
 <div id="bimestralParte3" class="seccion">
-  <div class="loginCardes">
+  <div class="loginCardegeneral">
 
      <div class="loginCardlogos">
         <div class="header-card">
@@ -2901,7 +3234,7 @@ onclick="limpiarFormularioMensual(); mostrar('pantallaReportes')">
         </div>
     </div>
     
-  <div class="panelFormulario">
+  <div class="panelFormulario2">
     <h2>📋 Confirmación bimestral</h2>
 
     <div id="resumenBimestral"></div><br>
@@ -2950,10 +3283,40 @@ function verEdificio(id){
 
         <hr>
 
-        <p><strong>Tarifa:</strong> ${e.tarifa || "-"}</p>
-        <p><strong>Consumo base:</strong> ${e.consumoBase || "-"} kWh</p>
-        <p><strong>Facturación:</strong> $${e.facturacion || "-"}</p>
-        <p><strong>Tipo línea base:</strong> ${e.tipoLineaBase || "-"}</p>
+    <p><strong>Tarifa:</strong> ${e.tarifa || "-"}</p>
+    <p><strong>Linea base:</strong> ${e.anioBase || "-"}</p>
+    <p><strong>Facturación:</strong> $${e.facturacion || "-"}</p>
+    <p><strong>Tipo línea base:</strong> ${e.tipoLineaBase || "-"}</p>
+
+<br>
+
+<table class="tablaResumen">
+
+  <thead>
+    <tr>
+      <th>Periodo</th>
+      <th>Consumo (kWh)</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    ${
+      e.lineaBase
+      ? e.lineaBase.map(item => `
+        <tr>
+          <td>${item.periodo}</td>
+          <td>${item.consumo}</td>
+        </tr>
+      `).join("")
+      : `<tr>
+           <td colspan="2">Sin información de línea base</td>
+         </tr>`
+    }
+
+  </tbody>
+
+</table>
       `;
 
       // 🔥 MOSTRAR MODAL
@@ -2966,31 +3329,42 @@ function verEdificio(id){
       alert("Error al cargar edificio");
     });
 }
-
-  function llenarResumenBimestralFlexible(){
+function llenarResumenBimestral(){
 
   if(mesesSeleccionadosBim.length !== 2){
     alert("Selecciona 2 meses");
     return;
-  }
+}
 
-  const consumo = document.getElementById("consumo_bimestre").value;
+  const consumo = document.getElementById("consumo_bimestre")?.value;
 
   if(!consumo){
     alert("Ingresa el consumo");
     return;
   }
 
-  const nombres = {
-    ene:"Enero", feb:"Febrero", mar:"Marzo", abr:"Abril",
-    may:"Mayo", jun:"Junio", jul:"Julio", ago:"Agosto",
-    sep:"Septiembre", oct:"Octubre", nov:"Noviembre", dic:"Diciembre"
-  };
+ const nombres = {
+  ene:"Enero",
+  feb:"Febrero",
+  mar:"Marzo",
+  abr:"Abril",
+  may:"Mayo",
+  jun:"Junio",
+  jul:"Julio",
+  ago:"Agosto",
+  sep:"Septiembre",
+  oct:"Octubre",
+  nov:"Noviembre",
+  dic:"Diciembre"
+};
 
-  document.getElementById("resumenBimestral").innerHTML = `
+  // Si no escribió nada, mostrar "Sin eventos"
+  const evento = document.getElementById("b1_periodo").value.trim() || "Sin eventos";
+
+  const html = `
     <h3>Datos generales</h3>
     Responsable: ${document.getElementById("b1_responsable").value}<br>
-    Evento previsto: ${document.getElementById("b1_periodo").value}<br>
+    Evento previsto: ${evento}<br>
 
     <hr>
 
@@ -3003,8 +3377,11 @@ function verEdificio(id){
     ${consumo} kWh
   `;
 
+  document.getElementById("resumenBimestral").innerHTML = html;
+
   mostrar("bimestralParte3");
 }
+
 function generarInputBimestreFlexible(){
 
   const cont = document.getElementById("inputConsumoBimestre");
@@ -3048,49 +3425,7 @@ function generarInputBimestreFlexible(){
 
   generarInputBimestreFlexible();
 }
-function llenarResumenBimestral(){
 
-  if(!bimestreSeleccionado){
-    alert("Selecciona un bimestre");
-    return;
-  }
-
-  const consumo = document.getElementById("consumo_bimestre")?.value;
-
-  if(!consumo){
-    alert("Ingresa el consumo");
-    return;
-  }
-
-  const nombres = {
-    ene_feb:"Enero - Febrero",
-    mar_abr:"Marzo - Abril",
-    may_jun:"Mayo - Junio",
-    jul_ago:"Julio - Agosto",
-    sep_oct:"Septiembre - Octubre",
-    nov_dic:"Noviembre - Diciembre"
-  };
-
-  const html = `
-    <h3>Datos generales</h3>
-    Responsable: ${document.getElementById("b1_responsable").value}
-    Evento previsto: ${document.getElementById("b1_periodo").value}
-
-    <hr>
-
-    <h3>Bimestre</h3>
-    ${nombres[bimestreSeleccionado]}<br>
-
-    <hr>
-
-    <h3>Consumo</h3>
-    ${consumo} kWh<br>
-  `;
-
-  document.getElementById("resumenBimestral").innerHTML = html;
-
-  mostrar("bimestralParte3");
-}
 
 function volverABimestral(){
 
@@ -3106,18 +3441,29 @@ function generarInputBimestre(){
 
   const contenedor = document.getElementById("inputsBimestre");
 
+  if(mesesSeleccionadosBim.length !== 2){
+    contenedor.innerHTML = "";
+    return;
+  }
+
   const nombres = {
-    ene_feb:"Enero - Febrero",
-    mar_abr:"Marzo - Abril",
-    may_jun:"Mayo - Junio",
-    jul_ago:"Julio - Agosto",
-    sep_oct:"Septiembre - Octubre",
-    nov_dic:"Noviembre - Diciembre"
+    ene:"Enero",
+    feb:"Febrero",
+    mar:"Marzo",
+    abr:"Abril",
+    may:"Mayo",
+    jun:"Junio",
+    jul:"Julio",
+    ago:"Agosto",
+    sep:"Septiembre",
+    oct:"Octubre",
+    nov:"Noviembre",
+    dic:"Diciembre"
   };
 
   contenedor.innerHTML = `
     <div class="grupoCampo">
-      <label>Consumo ${nombres[bimestreSeleccionado]}</label>
+      <label>Consumo ${nombres[mesesSeleccionadosBim[0]]} - ${nombres[mesesSeleccionadosBim[1]]}</label>
       <input type="number" id="consumo_bimestre" placeholder="kWh">
     </div>
   `;
@@ -3393,34 +3739,36 @@ function guardarReporteMensual(){
       mostrar("pantallaReportes");
     });
 }
-
 function llenarResumenMensual(){
 
   let consumoHTML = "";
 
   const nombres = {
-    ene:"Enero:",
-    feb:"Febrero:",
-    mar:"Marzo:",
-    abr:"Abril:",
-    may:"Mayo:",
-    jun:"Junio:",
-    jul:"Julio:",
-    ago:"Agosto:",
-    sep:"Septiembre:",
-    oct:"Octubre:",
-    nov:"Noviembre:",
-    dic:"Diciembre:"
+    ene:"Enero",
+    feb:"Febrero",
+    mar:"Marzo",
+    abr:"Abril",
+    may:"Mayo",
+    jun:"Junio",
+    jul:"Julio",
+    ago:"Agosto",
+    sep:"Septiembre",
+    oct:"Octubre",
+    nov:"Noviembre",
+    dic:"Diciembre"
   };
 
   mesesSeleccionados.forEach(m=>{
     consumoHTML += `${nombres[m]}: ${datosMeses[m]}<br>`;
   });
 
+  // Si no escribió nada, mostrar "Sin eventos"
+  const evento = document.getElementById("m1_evento").value.trim() || "Sin eventos";
+
   const html = `
     <h3>Datos generales</h3>
-    Responsable: ${m1_responsable.value}<br>
-    Evento previsto: ${m1_evento.value}<br>
+    Responsable: ${document.getElementById("m1_responsable").value}<br>
+    Evento previsto: ${evento}<br>
 
     <hr>
 
@@ -3615,44 +3963,87 @@ function eliminarReporteExterno(id){
       alert("Error al eliminar");
     });
 }
+
 let registroPendiente = null;
+
 function guardarReporteExterno(){
 
   const nombre = document.getElementById("nombreExt").value;
   const direccion = document.getElementById("direccionExt").value;
   const reporte = document.getElementById("reporteExt").value;
 
-  if(!nombre || !direccion || !reporte){
-    alert("Completa todos los campos");
-    return;
-  }
+ const btnSi = document.getElementById("btnSiExt");
+const btnNo = document.getElementById("btnNoExt");
 
-  db.collection("reportesExternos").add({
+if(nombre.trim() === ""){
+  alert("⚠ Debe capturar el nombre del responsable.");
+  return;
+}
+
+if(direccion.trim() === ""){
+  alert("⚠ Debe capturar la dirección del edificio.");
+  return;
+}
+
+if(
+    !btnSi.classList.contains("btnActivoSi") &&
+    !btnNo.classList.contains("btnActivoNo")
+){
+    alert("⚠ Debe indicar si desea agregar acciones a reportar.");
+    return;
+}
+
+if(btnSi.classList.contains("btnActivoSi") && reporte.trim() === ""){
+    alert("⚠ Debe escribir la información a reportar.");
+    return;
+}
+  db.collection("reportesExternos")
+  .add({
     nombre,
     direccion,
     reporte,
     fecha: new Date(),
     estadoId: registroActivo.id
+  })
+
+  .then(() => {
+
+    alert("✅ Reporte externo registrado correctamente.");
+
+    const btn = document.querySelector("#reporteExterno .btnVerde");
+    btn.innerText = "Guardado ✔";
+
+    setTimeout(() => {
+      btn.innerText = "Guardar";
+    }, 1500);
+
+    limpiarReporteExterno();
+
+  })
+
+  .catch(error => {
+
+    console.error(error);
+
+    alert("❌ Ocurrió un error al guardar el reporte.");
+
   });
-
-  // 👇 AQUÍ VA
-  const btn = document.querySelector("#reporteExterno .btnVerde");
-  btn.innerText = "Guardar";
-
-  setTimeout(()=>{
-    btn.innerText = "Guardar";
-  }, 1500);
-
-  limpiarReporteExterno();
 }
+
 function limpiarReporteExterno(){
+
   document.getElementById("nombreExt").value = "";
   document.getElementById("direccionExt").value = "";
   document.getElementById("reporteExt").value = "";
 
-  // opcional: enfocar el primer campo
+  // 🔥 Reiniciar la pregunta Sí / No
+  mostrarAccionesExterno(null);
+
+  // Regresar el cursor al primer campo
   document.getElementById("nombreExt").focus();
+
 }
+
 function volverAReportes(){
 
   if(
@@ -3764,21 +4155,31 @@ if(!edificioActivo){
 
 function limpiarFormularioBimestral(){
 
+  // 🔹 Inputs
   document.getElementById("b1_responsable").value = "";
   document.getElementById("b1_periodo").value = "";
 
-  document.querySelectorAll(".opcionMes").forEach(el=>{
+  // 🔹 Ocultar la justificación
+  document.getElementById("panelEventoBimestral").style.display = "none";
+
+  // 🔹 Quitar color de los botones
+  document.getElementById("btnSiBimestral").classList.remove("siActivo");
+  document.getElementById("btnNoBimestral").classList.remove("noActivo");
+
+  // 🔹 Quitar selección de meses
+  document.querySelectorAll(".opcionMes").forEach(el => {
     el.classList.remove("activo");
   });
 
-  mesesSeleccionadosBim = []; // 🔥 ESTO FALTABA
+  // 🔹 Limpiar datos en memoria
+  mesesSeleccionadosBim = [];
 
+  // 🔹 Limpiar inputs dinámicos
   document.getElementById("inputConsumoBimestre").innerHTML = "";
 
+  // 🔹 Limpiar resumen
   document.getElementById("resumenBimestral").innerHTML = "";
 }
-
-
 
 
   let modoForzado = false;
@@ -3869,7 +4270,7 @@ function cargarReportes(){
 
           contenido = `
             <strong>Responsable:</strong> ${r.responsable || "-"}<br>
-            <strong>Evento previsto:</strong> ${r.evento || "-"}<br><br>
+            <strong>Evento previsto:</strong> ${r.evento?.trim() || "Sin eventos"}<br><br>
 
             <strong>Consumo:</strong><br>
             ${consumoHTML}
@@ -3887,7 +4288,7 @@ function cargarReportes(){
 
           contenido = `
             <strong>Responsable:</strong> ${r.responsable || "-"}<br>
-            <strong>Evento previsto:</strong> ${r.periodo || "-"}<br><br>
+            <strong>Evento previsto:</strong> ${r.periodo?.trim() || "Sin eventos"}<br><br>
 
             <strong>Consumo ${mes1} - ${mes2}:</strong><br>
             ${r.consumo} kWh
@@ -3958,6 +4359,13 @@ function limpiarFormularioMensual(){
   // 🔹 inputs
   document.getElementById("m1_responsable").value = "";
   document.getElementById("m1_evento").value = "";
+
+  // 🔹 ocultar la justificación
+  document.getElementById("panelEventoMensual").style.display = "none";
+
+  // 🔹 quitar selección de los botones Sí y No
+  document.getElementById("btnSiMensual").classList.remove("siActivo");
+  document.getElementById("btnNoMensual").classList.remove("noActivo");
 
   // 🔹 datos en memoria
   datosMeses = {};
@@ -4144,6 +4552,7 @@ li.innerHTML = `
 
     });
 }
+
 function limpiarFormularioEdificio(){
 
   document.getElementById("responsableEdificio").value = "";
@@ -4160,7 +4569,7 @@ function limpiarFormularioEdificio(){
   document.getElementById("diaslaboral").value = "";
 
   document.getElementById("tarifelectric").value = "";
-  document.getElementById("consumlineabase").value = "";
+  // document.getElementById("consumlineabase").value = "";
   document.getElementById("factlineabse").value = "";
 
   document.getElementById("lineabase").value = "";
@@ -4600,20 +5009,46 @@ function guardarParte2(){
   }
 
   mostrar("formEdificioParte3");
+  crearTablaLineaBase();
 }
+
 function guardarParte3(){
 
-  edificioTemp.tarifa = document.getElementById("tarifelectric").value;
-  edificioTemp.consumoBase = document.getElementById("consumlineabase").value;
-  edificioTemp.facturacion = document.getElementById("factlineabse").value;
+  // Guardar datos generales
+  edificioTemp.tarifa = document.getElementById("tarifelectric").value.trim();
+  edificioTemp.facturacion = document.getElementById("factlineabse").value.trim();
+  edificioTemp.anioBase = document.getElementById("anioBase").value;
 
-  if(!edificioTemp.tarifa){
-    alert("Completa la tarifa eléctrica");
+  // Validar campos
+  if(edificioTemp.tarifa === ""){
+    alert("⚠ Completa la tarifa eléctrica.");
     return;
   }
 
+  if(edificioTemp.facturacion === ""){
+    alert("⚠ Completa la facturación eléctrica.");
+    return;
+  }
+
+  // Crear arreglo de línea base
+  edificioTemp.lineaBase = [];
+
+  mesesLineaBase.forEach((mes, i)=>{
+
+    edificioTemp.lineaBase.push({
+
+      periodo: mes,
+      consumo: Number(document.getElementById(`mes${i}`).value) || 0
+
+    });
+
+  });
+
+  // Pasar a la siguiente pantalla
   mostrar("formEdificioParte4");
+
 }
+
 function guardarParte4(){
 
   edificioTemp.tipoLineaBase = document.getElementById("lineabase").value;
@@ -4621,6 +5056,7 @@ function guardarParte4(){
   mostrarResumen();
   mostrar("formEdificioParteC");
 }
+
 function mostrarResumen(){
 
   const div = document.getElementById("resumenEdificio");
@@ -4644,11 +5080,38 @@ function mostrarResumen(){
     <hr>
 
     <p><strong>Tarifa:</strong> ${edificioTemp.tarifa}</p>
-    <p><strong>Consumo base:</strong> ${edificioTemp.consumoBase} kWh</p>
+    <p><strong>Año base:</strong> ${edificioTemp.anioBase}</p>
     <p><strong>Facturación:</strong> $${edificioTemp.facturacion}</p>
     <p><strong>Tipo línea base:</strong> ${edificioTemp.tipoLineaBase}</p>
+
+    <br>
+
+    <table class="tablaResumen">
+
+      <thead>
+        <tr>
+          <th>Periodo</th>
+          <th>Consumo (kWh)</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        ${
+          edificioTemp.lineaBase.map(item => `
+            <tr>
+              <td>${item.periodo}</td>
+              <td>${item.consumo}</td>
+            </tr>
+          `).join("")
+        }
+
+      </tbody>
+
+    </table>
   `;
 }
+
 function guardarTodoEdificio(){
 
   const obs = "";
@@ -4908,6 +5371,7 @@ function mostrar(id){
 
   seccion.classList.add("activo");
 }
+
 function volverAReportesDesdeMensual(){
 
   const salir = confirm("¿Salir? Se perderán los datos del formulario");
@@ -4918,6 +5382,7 @@ function volverAReportesDesdeMensual(){
 
   mostrar("pantallaReportes");
 }
+
 function volverRegistros(){
 
   if(unsubscribeDoc){
@@ -5158,29 +5623,82 @@ function guardarReporteSimple(){
 
   console.log("GUARDANDO:", tipoReporteSeleccionado);
 
-const data = {
-  tipo: tipoReporteSeleccionado,
+  // Obtener valores
+  const categoria = document.getElementById("categoriaReporte").value.trim();
+  const nombre = document.getElementById("nombreReporte").value.trim();
+  const responsable = document.getElementById("responsableReporte").value.trim();
+  const fechaFormulario = document.getElementById("fechaReporteGeneral").value;
+  const dependencia = document.getElementById("dependenciaReporte").value.trim();
+  const reporte = document.getElementById("textoReporteGeneral").value.trim();
 
-  estadoId: registroActivo.id, // 🔥 ESTA ES LA CLAVE
+  // Validar campos obligatorios
+  if(nombre === ""){
+    alert("⚠ Debe capturar el nombre del proyecto o acción.");
+    return;
+  }
 
-  categoria: document.getElementById("categoriaReporte").value,
-  nombre: document.getElementById("nombreReporte").value,
-  responsable: document.getElementById("responsableReporte").value,
- fecha: new Date(),
-  dependencia: document.getElementById("dependenciaReporte").value,
-  reporte: document.getElementById("textoReporteGeneral").value,
+  if(responsable === ""){
+    alert("⚠ Debe capturar el responsable.");
+    return;
+  }
 
-  timestamp: Date.now()
-};
+  if(fechaFormulario === ""){
+    alert("⚠ Debe seleccionar la fecha.");
+    return;
+  }
+
+  if(dependencia === ""){
+    alert("⚠ Debe capturar la dependencia.");
+    return;
+  }
+  // Obtener botones
+const btnSi = document.getElementById("btnSi");
+const btnNo = document.getElementById("btnNo");
+
+// Validar que eligió Sí o No
+if(
+    !btnSi.classList.contains("btnActivoSi") &&
+    !btnNo.classList.contains("btnActivoNo")
+){
+    alert("⚠ Debe indicar si desea agregar información a reportar.");
+    return;
+}
+
+  // Validar si seleccionó "Sí" y no escribió nada
+  if(document.getElementById("btnSi").classList.contains("btnActivoSi") && reporte === ""){
+    alert("⚠ Debe escribir la información a reportar.");
+    return;
+  }
+
+  const data = {
+
+    tipo: tipoReporteSeleccionado,
+
+    estadoId: registroActivo.id,
+
+    categoria: categoria,
+    nombre: nombre,
+    responsable: responsable,
+
+    // Fecha elegida por el usuario
+    fecha: fechaFormulario,
+
+    dependencia: dependencia,
+    reporte: reporte,
+
+    // Fecha y hora de registro
+    timestamp: Date.now()
+
+  };
 
   db.collection("reportesGenerales")
     .add(data)
 
     .then(()=>{
 
-      alert("✅ Reporte guardado");
+      alert("✅ Reporte guardado correctamente.");
 
-      // LIMPIAR
+      // Limpiar formulario
       document.getElementById("categoriaReporte").value = "";
       document.getElementById("nombreReporte").value = "";
       document.getElementById("responsableReporte").value = "";
@@ -5188,6 +5706,10 @@ const data = {
       document.getElementById("dependenciaReporte").value = "";
       document.getElementById("textoReporteGeneral").value = "";
 
+      // Reiniciar pregunta Sí / No
+      mostrarAcciones(null);
+
+      // Actualizar lista
       cargarReportesGenerales();
 
     })
@@ -5196,9 +5718,12 @@ const data = {
 
       console.error(err);
 
-      alert("Error al guardar");
+      alert("❌ Error al guardar el reporte.");
+
     });
+
 }
+
 function verEdificiosAdmin(){
 
 mostrar("listaRegistros") // o la pantalla a la que quieras regresar
@@ -5213,7 +5738,7 @@ function volverSegunRol(){
   } else {
     mostrar("seleccionReporte");
   }
-
+mostrarAccionesExterno(null);
 }
 
 function cargarReportesGenerales(){
@@ -5282,12 +5807,14 @@ function cargarReportesGenerales(){
             </div>
 
             <div class="detalleResultado">
-              <strong>Nombre del proyecto:</strong> ${r.nombre}<br><br>
+              <strong>Nombre del proyecto o acción:</strong> ${r.nombre}<br><br>
               <strong>Responsable:</strong> ${r.responsable}<br><br>
               <strong>Dependencia:</strong> ${r.dependencia}<br><br>
 
-              <strong>Reporte:</strong><br>
-              ${r.reporte}
+              <strong>Reporte:</strong><br><br>
+                ${r.reporte && r.reporte.trim() !== ""
+                ? r.reporte
+                : "<div style='padding:10px;border-radius:8px;background:#f3f4f6;color:#6b7280;font-style:italic;'>ℹ️ Sin datos para reportar.</div>"}
 
               <br><br>
               🕒 ${
@@ -5524,14 +6051,29 @@ function volverDesdeReportes(){
 
   console.log("ROL ACTUAL:", rolUsuario);
 
+  limpiarReporteGeneral();
+
   if(rolUsuario === "admin"){
     mostrar("pantallaCategorias");
-  } else if(rolUsuario === "usuario"){
+  }else if(rolUsuario === "usuario"){
     mostrar("seleccionReporte");
-  } else {
-    // 🔥 fallback por si se pierde el rol
+  }else{
     mostrar("inicio");
   }
+
+}
+
+function limpiarReporteGeneral(){
+
+  document.getElementById("categoriaReporte").value = "";
+  document.getElementById("nombreReporte").value = "";
+  document.getElementById("responsableReporte").value = "";
+  document.getElementById("fechaReporteGeneral").value = "";
+  document.getElementById("dependenciaReporte").value = "";
+  document.getElementById("textoReporteGeneral").value = "";
+
+  // Reiniciar la pregunta
+  mostrarAcciones(null);
 
 }
 
@@ -5861,7 +6403,171 @@ tipoRow.getCell(2).font = {
 };
 
 }
+function mostrarAcciones(mostrar){
 
+    const panel = document.getElementById("panelAcciones");
+
+    const si = document.getElementById("btnSi");
+    const no = document.getElementById("btnNo");
+
+    // 🔹 Reiniciar todo
+    if(mostrar === null){
+
+        panel.style.display = "none";
+        document.getElementById("textoReporteGeneral").value = "";
+
+        si.classList.remove("btnActivoSi");
+        no.classList.remove("btnActivoNo");
+
+        return;
+    }
+
+    if(mostrar){
+
+        panel.style.display = "block";
+
+        si.classList.add("btnActivoSi");
+        no.classList.remove("btnActivoNo");
+
+    }else{
+
+        panel.style.display = "none";
+        document.getElementById("textoReporteGeneral").value = "";
+
+        no.classList.add("btnActivoNo");
+        si.classList.remove("btnActivoSi");
+
+    }
+
+
+}
+
+function mostrarAccionesExterno(mostrar){
+
+    const panel = document.getElementById("panelAccionesExt");
+
+    const si = document.getElementById("btnSiExt");
+    const no = document.getElementById("btnNoExt");
+
+    if(mostrar === null){
+
+        panel.style.display = "none";
+
+        document.getElementById("reporteExt").value = "";
+
+        si.classList.remove("btnActivoSi");
+        no.classList.remove("btnActivoNo");
+
+        return;
+    }
+
+    if(mostrar){
+
+        panel.style.display = "block";
+
+        si.classList.add("btnActivoSi");
+        no.classList.remove("btnActivoNo");
+
+    }else{
+
+        panel.style.display = "none";
+
+        document.getElementById("reporteExt").value = "";
+
+        no.classList.add("btnActivoNo");
+        si.classList.remove("btnActivoSi");
+
+    }
+
+}
+
+const mesesLineaBase = [
+  "Enero",
+  "Febrero",
+  "Marzo",
+  "Abril",
+  "Mayo",
+  "Junio",
+  "Julio",
+  "Agosto",
+  "Septiembre",
+  "Octubre",
+  "Noviembre",
+  "Diciembre"
+];
+
+function crearTablaLineaBase(){
+
+  const tbody = document.getElementById("tablaLineaBaseBody");
+
+  tbody.innerHTML = "";
+
+  mesesLineaBase.forEach((mes, i)=>{
+
+    tbody.innerHTML += `
+      <tr>
+        <td>${mes}</td>
+        <td>
+          <input
+            type="number"
+            id="mes${i}"
+            min="0"
+            placeholder="0">
+        </td>
+      </tr>
+    `;
+
+  });
+
+}
+function mostrarEventoMensual(mostrar){
+
+    const panel = document.getElementById("panelEventoMensual");
+
+    const btnSi = document.getElementById("btnSiMensual");
+    const btnNo = document.getElementById("btnNoMensual");
+
+    if(mostrar){
+
+        panel.style.display = "block";
+
+        btnSi.classList.add("siActivo");
+        btnNo.classList.remove("noActivo");
+
+    }else{
+
+        panel.style.display = "none";
+        document.getElementById("m1_evento").value = "";
+
+        btnNo.classList.add("noActivo");
+        btnSi.classList.remove("siActivo");
+
+    }
+
+}
+function mostrarEventoBimestral(mostrar){
+
+    const panel = document.getElementById("panelEventoBimestral");
+
+    const btnSi = document.getElementById("btnSiBimestral");
+    const btnNo = document.getElementById("btnNoBimestral");
+
+    if(mostrar){
+
+        panel.style.display = "block";
+
+        btnSi.classList.add("siActivo");
+        btnNo.classList.remove("noActivo");
+
+    }else{
+
+        panel.style.display = "none";
+        document.getElementById("b1_periodo").value = "";
+
+        btnNo.classList.add("noActivo");
+        btnSi.classList.remove("siActivo");
+    }
+}
 </script>
 
 </body>
